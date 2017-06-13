@@ -1,0 +1,882 @@
+{% extends "sitebase.html" %}
+{% load static from staticfiles %}
+
+{% block ext_style %}
+    <link href="{% static 'assets/global/css/jquery.fancybox.css' %}" rel="stylesheet" type="text/css">
+
+    <style type="text/css">
+        .gallery-item {
+            text-align: center;
+        }
+
+        .gallery-item .photo {
+            /*border: 2px solid transparent;*/
+            border: 2px solid #193050;
+            background-image: url("../../../static/assets/admin/layout/img/new_images/course_bg.png");
+            background-size: cover;
+            cursor: pointer;
+        }
+
+        .gallery-item .photo img.stop {
+            filter: grayscale(100%);
+            -webkit-filter: grayscale(100%);
+            -moz-filter: grayscale(100%);
+        }
+
+        .gallery-item .photo img.stop {
+            filter: grayscale(100%);
+            -webkit-filter: grayscale(100%);
+            -moz-filter: grayscale(100%);
+        }
+
+        /*.gallery-item:hover .photo{border:1px solid #428bca;}*/
+        .gallery-item p {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        .gallery-item p a {
+            text-decoration: none;
+            color: #a0a0a0;
+        }
+
+        .gallery-item p a:hover {
+            color: #fff;
+        }
+
+        #SWFUpload_0, #SWFUpload_1 {
+            margin-left: -20px;
+        }
+
+
+        .image-header {
+            font-weight: bolder;
+            color: #fff;
+        }
+
+        .col-sm-3 {
+            text-align:right;
+            line-height:34px;
+        }
+
+        i.fa-info-circle,.modal i.fa-refresh {
+            font-size:18px;
+            line-height: 34px;
+            cursor:pointer;
+        }
+        .modal i.fa-refresh{
+            margin-left:10px;
+        }
+
+        .modal-footer{
+            text-align:center;
+        }
+
+        .help-block{
+            padding-bottom: 0;
+        }
+        h4{
+            font-family: "微软雅黑";
+        }
+
+        .photo h5{
+            word-break: break-all;
+            word-wrap: normal;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="row margin-bottom-40">
+        <!-- BEGIN CONTENT -->
+        <div class="col-md-12">
+            <!-- BEGIN TAB PORTLET-->
+            <div class="portlet box darkgray">
+                <div class="portlet-title" style="padding:0;">
+                    <ul class="nav nav-tabs pull-left">
+                        <li class="active">
+                            <a href="#portlet_tab1" data-toggle="tab" style="margin-left:0;">
+                                镜像列表
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#portlet_tab2" data-toggle="tab">
+                                操作系统安装文件
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="portlet-body">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="portlet_tab1">
+                            <div class="row">
+                                <div class="actions pull-right">
+                                    <a href="#"  class="help"><i class="fa fa-question"></i>帮助</a>
+                                    <a href="#" class="btnadd" data-toggle="modal" data-target="#createBaseImage"><i class="fa fa-plus"></i>新建</a>
+                                    <a href="#" id="base-image-refresh"><i class="fa fa-refresh"></i>刷新</a>
+                                    <a data-href="{{ imagesftp }}" class="btn-import" id="upload_image"><i class="fa fa-upload"></i>上传</a>
+
+                                    <div class="zoom" style="display:none;" id="data">
+                                        <a href="{% static 'assets/global/img/social/help1.jpg' %}" class="fancybox-help" rel="fancybox-help">
+                                            <img class="fancy-img"  src="{% static 'assets/global/img/social/help1.jpg' %}"/>
+                                        </a>
+                                        <a href="{% static 'assets/global/img/social/help2.jpg' %}" class="fancybox-help" rel="fancybox-help">
+                                            <img src="{% static 'assets/global/img/social/help2.jpg' %}"/>
+                                        </a>
+                                        <a href="{% static 'assets/global/img/social/help22.jpg' %}" class="fancybox-help" rel="fancybox-help">
+                                            <img src="{% static 'assets/global/img/social/help22.jpg' %}"/>
+                                        </a>
+                                        <a href="{% static 'assets/global/img/social/help6.jpg' %}" class="fancybox-help" rel="fancybox-help">
+                                            <img src="{% static 'assets/global/img/social/help6.jpg' %}"/>
+                                        </a>
+                                        <a href="{% static 'assets/global/img/social/help7.jpg' %}" class="fancybox-help" rel="fancybox-help">
+                                            <img src="{% static 'assets/global/img/social/help7.jpg' %}"/>
+                                        </a>
+                                        <a href="{% static 'assets/global/img/social/help8.jpg' %}" class="fancybox-help" rel="fancybox-help">
+                                            <img src="{% static 'assets/global/img/social/help8.jpg' %}"/>
+                                        </a>
+                                         <a href="{% static 'assets/global/img/social/help9.jpg' %}" class="fancybox-help" rel="fancybox-help">
+                                            <img src="{% static 'assets/global/img/social/help9.jpg' %}"/>
+                                        </a>
+                                        <a href="{% static 'assets/global/img/social/help10.jpg' %}" class="fancybox-help" rel="fancybox-help">
+                                            <img src="{% static 'assets/global/img/social/help10.jpg' %}"/>
+                                        </a>
+                                        <a href="{% static 'assets/global/img/social/help11.jpg' %}" class="fancybox-help" rel="fancybox-help">
+                                            <img src="{% static 'assets/global/img/social/help11.jpg' %}"/>
+                                        </a>
+                                        <a href="{% static 'assets/global/img/social/help12.jpg' %}" class="fancybox-help" rel="fancybox-help">
+                                            <img src="{% static 'assets/global/img/social/help12.jpg' %}"/>
+                                        </a>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row margin-bottom-10 carousel slide" id="image-list">
+                                {% for image in base_images %}
+                                    <div class="col-md-3 col-sm-4 gallery-item margin-top-10">
+                                        <div class="photo" title="{{ image.refname|default_if_none:'' }}" data-image_id="{{ image.id }}" data-vm_id="{{ image.vm_id|default_if_none:'' }}" style="position: relative;padding-left:10px;padding-right:10px;padding-bottom:5px;min-height: 215px;">
+                                            <p style="text-align: center;position:absolute;right:10px;">
+                                                {% if not image.os_version %}
+                                                    <a title="补全设置" data-name="{{ image.name }}" data-image_id="{{ image.id }}" data-capacity="{{ image.capacity }}" class="addImageInfo">
+                                                        <i class="fa fa-pencil edit-image" style="font-size:1.5em;min-width:30px" data-placement="top" title="补全设置"></i>
+                                                    </a>
+                                                {% elif not image.published %}
+                                                    <a title="修改名称" data-name="{{ image.name }}" data-image_id="{{ image.id }}" class="editImageName">
+                                                        <i class="fa fa-pencil-square-o" style="font-size:1.5em;min-width:30px"></i>
+                                                    </a>
+                                                    <a data-vm_id="{{ image.vm_id|default_if_none:'' }}" data-image_id="{{ image.id }}" class="publishImage" title="发布">
+                                                        <i class="fa fa-check publish-image" style="font-size:1.5em;margin: 0 5px 0 0" data-placement="top" title="发布"></i>
+                                                    </a>
+                                                    <a data-uuid="{{ image.vm_id|default_if_none:'' }}" data-name="{{ image.name }}" data-refname="{{ image.refname|default_if_none:'' }}" class="editImage" title="设置">
+                                                        <i class="fa fa-cog edit-image" style="font-size:1.5em;margin: 0 5px 0 0"></i>
+                                                    </a>
+                                                {% endif %}
+                                                {% if image.published %}
+                                                    <a title="复制" class="copyImage" data-image_id="{{ image.id }}">
+                                                        <i class="fa fa-copy" style="font-size:1.5em;"></i>
+                                                    </a>
+                                                {% endif %}
+                                                <a title="删除" class="deleteImage" data-image_id="{{ image.id }}">
+                                                    <i class="fa fa-trash" style="font-size:1.5em;"></i>
+                                                </a>
+                                            </p>
+
+                                            <img alt="" src="{{ image.img_url }}" class="img-responsive"/>
+
+                                            <h5 class="image-header">{{ image.name }}</h5>
+
+                                            <div class="opacity" style="background: #000;opacity: 0.3;width:100%;height:30px;position:absolute;bottom:0;margin-left:-10px;display: none;"></div>
+                                            <div class="opacity_tit" style="position:absolute;bottom:6px;color:#91959c;display: none;text-align: center;margin-left: -10px;width:100%;">
+                                                <span>状态：</span><span class="course_status">运行中</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="portlet_tab2">
+                            <div class="actions pull-right">
+                                <a class="btn" id="id_refresh_isos"><i class="fa fa-refresh"></i>刷新</a>&nbsp;
+                                <a data-href="{{ isoftp }}" class="btn" id="id_upload_iso"><i class="fa fa-upload"></i>上传</a>&nbsp;
+                            </div>
+
+                            <table class="table table-striped table-bordered table-hover" id="sample_2">
+                                <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>文件大小</th>
+                                    <th>上传时间</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody class="isolist">
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新建base -->
+    <div class="modal fade" id="createBaseImage" tabindex="-1" role="dialog" aria-labelledby="createBase">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>创建基础镜像</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="createBaseImageForm" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="col-sm-3"><span class="red">*</span>{{ form.name.label }}</label>
+
+                            <div class="col-sm-7">
+                                {{ form.name }}
+                            </div>
+                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="镜像名称不能为空"></i>
+                        </div>
+                        <div class="form-group">
+                            <label for="os_iso" class="col-sm-3"><span class="red">*</span>操作系统光盘</label>
+
+                            <div class="col-sm-7">
+                                <select class="form-control" name="os_iso" id="os_iso">
+                                    <option value="">选择光盘</option>
+                                </select>
+                            </div>
+                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="操作系统光盘不能为空"></i>
+                            <i class="fa fa-refresh" id="id_refresh_iso" title="刷新光盘"></i>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3"><span class="red">*</span>{{ form.os_type.label }}</label>
+
+                            <div class="col-sm-7">
+                                {{ form.os_type }}
+                            </div>
+                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="待创建镜像所使用的操作系统类型，目前包括Windows和Linux两种"></i>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3"><span class="red">*</span>{{ form.os_version.label }}</label>
+
+                            <div class="col-sm-7">
+                                {{ form.os_version }}
+                            </div>
+                             <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="操作系统版本不能为空"></i>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3"><span class="red">*</span>{{ form.capacity.label }}</label>
+
+                            <div class="col-sm-7">
+                                {{ form.capacity }}
+                            </div>
+                             <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="硬盘大小不能为空，新建镜像时,Win7、Win8至少选择20G或以上的硬盘"></i>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" id="baseImageFormSubmit">创建</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- base添加基础信息 -->
+    <div class="modal fade bs-example-modal-lg" id="addBaseInfoModal" tabindex="-1" role="dialog" aria-labelledby="addBaseInfo">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>镜像设置</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="addBaseInfo" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="image_id" id="baseInfoImageId" value="">
+                        <div class="form-group">
+                            <label class="col-sm-2"><span class="red">*</span>{{ base_info_form.name.label }}</label>
+
+                            <div class="col-sm-10">
+                                {{ base_info_form.name }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2"><span class="red">*</span>{{ base_info_form.os_type.label }}</label>
+
+                            <div class="col-sm-10">
+                                {{ base_info_form.os_type }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2"><span class="red">*</span>{{ base_info_form.os_version.label }}</label>
+
+                            <div class="col-sm-10">
+                                {{ base_info_form.os_version }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2"><span class="red">*</span>{{ base_info_form.capacity.label }}</label>
+
+                            <div class="col-sm-10">
+                                {{ base_info_form.capacity }}
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" id="baseInfoFormSave">保存</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- base修改名称 -->
+    <div class="modal fade bs-example-modal-lg" id="editImageNameModal" tabindex="-1" role="dialog" aria-labelledby="editImageNameModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>修改镜像名称</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="editImageNameForm" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="image_id" id="editImageNameId" value="">
+                        <div class="form-group">
+                            <label class="col-sm-2"><span class="red">*</span>{{ image_name_form.name.label }}</label>
+
+                            <div class="col-sm-10">
+                                {{ image_name_form.name }}
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" id="editImageNameSave">保存</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+    <script src="{% static 'assets/global/plugins/dialog/jquery_dialog.js' %}"></script>
+    <script src="{% static 'assets/global/plugins/upload/jquery.uploadify.min.js' %}"></script>
+    <script src="{% static 'assets/global/scripts/jquery.fancybox.pack.js' %}"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("[data-toggle='tooltip']").tooltip();
+        });
+
+        // 上传镜像
+        $("#upload_image").on("click", function() {
+            var _self = $(this);
+            window.location.href = _self.data("href");
+        });
+
+        // 上传iso文件
+        $("#id_upload_iso").on("click", function() {
+            var _self = $(this);
+            window.location.href = _self.data("href");
+        });
+
+        /*初始化镜像列表*/
+        function initisolist() {
+            var opt = {url: "{% url 'ajax_get_isos' %}", data: null, async: true};
+            common.ajaxpostrequest(opt, function (rsp) {
+                        if (rsp != null) {
+                            var str = "";
+                            var datalist = rsp["isos"];
+                            for (i = 0; i < datalist.length; i++) {
+                                var info = datalist[i];
+                                str += "<tr><td>" + info.name + "</td><td>" + info.size + "</td><td>" + info.ctime + "</td><td><a href='#' onclick='del_iso(\"" + info.name + "\",1)'>删除</a></td></tr>";
+                            }
+                            $(".isolist").html(str);
+                        }
+                    }
+            );
+
+        }
+
+        // 初始化光盘选项
+        function init_os_iso() {
+            var opt = {url: "{% url 'ajax_get_isos' %}", data: null, async: true};
+            common.ajaxpostrequest(opt, function(res) {
+                if (res != null) {}
+                var s = "<option value=''>选择光盘</option>";
+                var isos = res["isos"];
+                for (i=0; i<isos.length; i++) {
+                    var iso = isos[i];
+                    s += "<option value=" + iso.path + ">" + iso.name + "</option>";
+                }
+                $("#os_iso").html(s);
+            })
+        }
+
+
+        /* 删除镜像文件iso */
+        function del_iso(name, type) {
+            $.MsgBox.Confirm("提示", "确定要删除该文件吗？", function () {
+                var opt = {url: "{% url 'ajax_del_file' %}", data: {"name": name, "type": type}, async: false};
+                common.ajaxpostrequest(opt, function (rsp) {
+                    if (rsp["result"] = "ok") {
+                        notie.alert(1,"镜像文件iso删除成功",2);
+                        initisolist();
+                    }
+                })
+            });
+        }
+
+        // 刷新基础镜像列表
+        $("#base-image-refresh").on("click", function() {
+            loading();
+            var opt = {url: "{% url 'ajax_refresh_base_image' %}", data: null, async: true};
+            common.ajaxpostrequest(opt, function (rsp) {
+                spinner.stop();
+                $(".bg").fadeOut(2000);
+                notie.alert(1,"刷新镜像成功",2);
+                common.reload_page();
+            });
+        });
+
+        // 复制镜像
+        $(document).on("click", ".copyImage", function() {
+            var _self = $(this);
+            $.MsgBox.Confirm("提示", "确认复制该镜像？复制操作耗时较长,请耐心等待~", function() {
+                loading();
+                var image_id =_self.data("image_id");
+                var opt = {"url": "{% url 'ajax_copy_base_image' %}", "data": {"image_id": image_id}, "async": true};
+                common.ajaxpostrequest(opt, function(res) {
+                    if (res["result"] == "ok") {
+                        notie.alert(1, "复制成功", 2);
+                        common.reload_page();
+                    } else {
+                        notie.alert(3, res["message"], 3);
+                    }
+                })
+            })
+        });
+
+        // 发布
+        $(document).on("click", ".publishImage", function() {
+            var self = $(this);
+            $.MsgBox.Confirm("提示", "发布后将不能修改,确认发布？", function() {
+                loading();
+                var vm_id = self.data("vm_id");
+                var image_id = self.data("image_id");
+                var opt = {"url": "{% url 'ajax_publish_base_image' %}", "data": {"vm_id": vm_id, "image_id": image_id}, "async": true};
+                common.ajaxpostrequest(opt, function(res) {
+                    if (res["result"] == "ok") {
+                        notie.alert(1,"发布成功",2);
+                        common.reload_page();
+                    } else {
+                        notie.alert(3,res["message"],3);
+                    }
+                    spinner.stop();
+                    $(".bg").fadeOut(2000);
+                })
+            })
+        });
+
+        // 编辑基础镜像
+        $(document).on("click", ".editImage", function() {
+            var self = $(this);
+            var uuid = self.data("uuid");
+            var name = self.data("name");
+            var refname = self.data("refname");
+            vncview(uuid, refname, name, "share");
+        });
+
+        // 删除base
+        $(document).on("click", ".deleteImage", function() {
+            var image_id = $(this).data("image_id");
+
+            $.MsgBox.Confirm("提示", "仅在没有课程基于该镜像的情况下才可删除,确认删除?", function() {
+                loading();
+                var opt = {"url": "{% url 'ajax_del_base_image' %}", "data": {"image_id": image_id}, "async": true};
+                common.ajaxpostrequest(opt, function(res) {
+                    spinner.stop();
+                    $(".bg").fadeOut(2000);
+                    if (res["result"] == "ok") {
+                        notie.alert(1,"删除成功!",2);
+                        common.reload_page();
+                    } else {
+                        notie.alert(3,res['message'],3);
+                    }
+                })
+            })
+        });
+
+        // vnc
+        function vncview(uuid, name, title, features){
+            loading();
+            var opt = {
+                "url": "{% url 'ajax_start_vnc' %}",
+                "data": {"uuid": uuid, "name": name, "features": features},
+                "async": true
+            };
+            common.ajaxpostrequest(opt, function (rsp) {
+                if (rsp["result"] == "ok"){
+                    var ip = rsp['ip'];
+                    var targetip = rsp['targetip'];
+                    var open_url = "{% url 'vnc_view' %}?name=" + name + "&uuid=" + uuid + "&ip=" + ip + "&targetip=" + targetip;
+                    window.open(open_url, name, 'fullscreen=1,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=yes,location=no, status=no');
+                } else {
+                    notie.alert(3, rsp['message'], 3);
+                }
+                spinner.stop();
+                $(".bg").fadeOut(2000)
+            });
+        }
+
+        // 补全镜像设置弹出modal
+        $(document).on("click", ".addImageInfo", function() {
+            var self = $(this);
+            // 硬盘大小不能小于base镜像大小
+            var capacity = parseInt(self.data('capacity'));
+            $("#addBaseInfo #id_capacity").find('option').each(function() {
+                var option = $(this);
+                var option_value = parseInt(option.val());
+                if (option_value && option_value < capacity) {
+                    option.hide()
+                } else {
+                    option.show()
+                }
+                option.attr("selected", false);
+            });
+            $("#addBaseInfo #id_name").val(self.data("name"));
+            $("#baseInfoImageId").val(self.data("image_id"));
+            $("#addBaseInfoModal").modal("show");
+        });
+
+        // 修改镜像名称
+        $(document).on("click", ".editImageName", function() {
+            var _self = $(this);
+            $("#editImageNameForm #id_name").val(_self.data("name"));
+            $("#editImageNameId").val(_self.data("image_id"));
+            $("#editImageNameModal").modal("show");
+        });
+
+        // 新建镜像时,win7、win8至少选择20G或以上的硬盘
+        $("#id_os_version").on("change", function(){
+            var version = $(this).val();
+            if (version == 5 || version == 6 || version == 7 || version == 8) {
+                $("#createBaseImageForm #id_capacity").find("option").each(function() {
+                    var option = $(this);
+                    var option_value = parseInt(option.val());
+                    if (option_value && option_value < 20480) {
+                        option.hide();
+                    } else {
+                        option.show();
+                    }
+                    option.attr("selected", false);
+                    });
+            } else {
+                $("#createBaseImageForm #id_capacity").find("option").each(function() {
+                    $(this).show();
+                })
+            }
+        });
+
+        // 修改镜像名称提交
+        $("#editImageNameForm").bootstrapValidator({
+            feedbackIcons: {
+                valid: 'fa fa-check',
+                invalid: 'fa fa-remove',
+                validating: 'fa fa-refresh'
+            },
+            fields: {
+                name: {
+                    validators: {
+                        notEmpty: {
+                            message: "名称不能为空"
+                        },
+                        stringLength:{
+                            max:20,
+                            message:"镜像名称最长为20个字符"
+                        }
+                    }
+                }
+            }
+        }).on('success.form.bv', function (e) {
+            e.preventDefault();
+            loading();
+            var $form = $(e.target);
+            var opt = {
+                "url": "{% url 'ajax_edit_image_name' %}",
+                "data": $form.serialize(),
+                "async": true
+            };
+            common.ajaxpostrequest(opt, function (res) {
+                if (res["result"] == "ok") {
+                    notie.alert(1, "修改成功", 2);
+                    common.reload_page();
+                } else {
+                    notie.alert(3, res['message'], 3);
+                }
+                spinner.stop();
+                $(".bg").fadeOut(2000);
+            })
+        });
+
+        // 补全镜像设置提交
+        $("#addBaseInfo").bootstrapValidator({
+            feedbackIcons: {
+                valid: 'fa fa-check',
+                invalid: 'fa fa-remove',
+                validating: 'fa fa-refresh'
+            },
+            fields: {
+                name: {
+                    validators: {
+                        notEmpty: {
+                            message: "名称不能为空"
+                        },
+                        stringLength:{
+                            max:20,
+                            message:"镜像名称最长为20个字符"
+                        }
+                    }
+                },
+                capacity: {
+                    validators: {
+                        notEmpty: {
+                            message: "硬盘大小不能为空"
+                        }
+                    }
+                },
+                os_type: {
+                    validators: {
+                        notEmpty: {
+                            message: "操作系统类型不能为空"
+                        }
+                    }
+                },
+                os_version: {
+                    validators: {
+                        notEmpty: {
+                            message: "操作系统版本不能为空"
+                        }
+                    }
+                }
+            }
+        }).on('success.form.bv', function (e) {
+            e.preventDefault();
+            $.MsgBox.Confirm("提示", "保存后将无法进行修改,请确保填写正确!", function() {
+                loading();
+                var $form = $(e.target);
+                var opt = {
+                    "url": "{% url 'ajax_add_image_info' %}",
+                    "data": $form.serialize(),
+                    "async": true
+                };
+                common.ajaxpostrequest(opt, function (res) {
+                    if (res["result"] == "ok") {
+                        notie.alert(1,"设置成功",2);
+                        common.reload_page();
+                    } else {
+                        notie.alert(3,res['message'],3);
+                    }
+                    spinner.stop();
+                    $(".bg").fadeOut(2000);
+                })
+            });
+        });
+
+        // 新建base镜像
+        $("#createBaseImageForm").bootstrapValidator({
+            feedbackIcons: {
+                valid: 'fa fa-check',
+                invalid: 'fa fa-remove',
+                validating: 'fa fa-refresh'
+            },
+            fields: {
+                name: {
+                    validators: {
+                        notEmpty: {
+                            message: "镜像名称不能为空"
+                        },
+                        stringLength:{
+                            max:20,
+                            message:"镜像名称最长为20个字符"
+                        }
+                    }
+                },
+                os_iso: {
+                    validators: {
+                        notEmpty: {
+                            message: "操作系统光盘不能为空"
+                        }
+                    }
+                },
+                os_type: {
+                    validators: {
+                        notEmpty: {
+                            message: "操作系统类型不能为空"
+                        }
+                    }
+                },
+                os_version: {
+                    validators: {
+                        notEmpty: {
+                            message: "操作系统版本不能为空"
+                        }
+                    }
+                },
+                capacity: {
+                    validators: {
+                        notEmpty: {
+                            message: "硬盘大小不能为空"
+                        }
+                    }
+                }
+            }
+        }).on('success.form.bv', function (e) {
+            e.preventDefault();
+            $.MsgBox.Confirm("提示", "保存后将无法进行修改,请确保填写正确!", function() {
+                loading();
+                var $form = $(e.target);
+                var opt = {
+                    "url": "{% url 'ajax_add_base_image' %}",
+                    "data": $form.serialize(),
+                    "type": "post",
+                    "async": true
+                };
+                common.ajaxpostrequest(opt, function (res) {
+                    if (res["result"] == "ok") {
+                        $("#createBaseImage").modal("hide");
+                        vncview(res['vm_id'], res['refname'], res['name'], "");
+                        spinner.stop();
+                        $(".bg").fadeOut(2000);
+                    } else {
+                        notie.alert(3,res['message'],3);
+                    }
+                    spinner.stop();
+                    $(".bg").fadeOut(2000);
+                })
+            });
+        });
+
+        function initcoursestatus() {
+            $("#image-list .gallery-item .photo").each(function () {
+                var vm_id = $(this).data("vm_id");
+                if (vm_id) {
+                    getcoursestatus($(this), vm_id);
+                }
+            })
+        }
+
+        function getcoursestatus(dom, vm_id) {
+            var opt = {"url": "{% url 'vnc_operate' %}", "data": {"id": vm_id, "operateType": "4"}, "async": true};
+            common.ajaxpostrequest(opt, function (rsp) {
+                var status = rsp["result"];
+                if (status == "running") {
+                    dom.find(".opacity").show();
+                    dom.find(".opacity_tit").show();
+                    // dom.find(".course_status").html("运行中")
+                } else {
+                    dom.find(".opacity").hide();
+                    dom.find(".opacity_tit").hide();
+                }
+            })
+        }
+
+        initcoursestatus();
+
+        // 操作类型与版本联动
+        function hide_linux(options){
+            options.each(function () {
+                if ($(this).val() < 50) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+        var options = $("#id_os_version option");
+        hide_linux(options);
+
+        $("select[name='os_type']").on("click", function() {
+            var self = $(this);
+            var os_type = self.val();
+
+            var this_div = self.parents('form');
+            $("#id_os_version", this_div).val('');
+            var options = $("#id_os_version option", this_div);
+            if (os_type == 0) {
+                options.each(function() {
+                    if ($(this).val() < 50) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                })
+            } else if (os_type == 1) {
+                options.each(function() {
+                    if ($(this).val() < 50) {
+                        $(this).hide();
+                    } else {
+                        $(this).show();
+                    }
+                })
+            }
+        });
+
+        //新建镜像时刷新光盘选项
+        $("#id_refresh_iso").on("click",function(){
+            initisolist();
+            init_os_iso();
+
+           $("#id_refresh_iso").addClass("fa-spin");
+            setTimeout(function(){
+                $("#id_refresh_iso").removeClass("fa-spin");
+                notie.alert(1, "操作系统选项已刷新", 3);
+            },2000);
+        });
+
+        // 帮助按钮点击事件
+        $(".help").on("click",function(){
+            $(".fancy-img").trigger("click");
+        });
+
+        $(document).ready(function () {
+            common.initmenu("images", "");
+
+            // 弹出tooltip
+            $(function () { $(".edit-image").tooltip('show'); });
+            $(function () { $(".publish-image").tooltip('show'); });
+
+            initisolist();
+
+            $("#id_refresh_isos").on("click",function(){
+                initisolist();
+                notie.alert(1, "文件列表刷新成功", 3);
+            });
+
+            init_os_iso();
+
+            $(".fancybox-help").fancybox({
+                prevEffect: 'none',
+                nextEffect: 'none',
+                closeBtn: true,
+                helpers: {
+                    title: {
+                        type: 'inside'
+                    }
+                },
+                loop:false
+            });
+
+        });
+    </script>
+{% endblock script %}

@@ -1,0 +1,362 @@
+{% extends "sitebase.html" %}
+{% load static from staticfiles %}
+
+{% block ext_style %}
+    <!-- BEGIN PAGE LEVEL STYLES -->
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/global/plugins/select2/select2.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.css' %}"/>
+    <link href="{% static 'assets/global/css/pagination.css' %}" rel="stylesheet"/>
+    <!-- END PAGE LEVEL STYLES -->
+
+    <style type="text/css">
+        #gradelist > tr > td {
+            line-height: 46px;
+            padding-bottom: 0;
+            padding-top: 0;
+        }
+
+        .fa.fa-info-circle {
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .control-name, .control-desc, .control-num {
+            height: 30px;
+            line-height: 30px;
+            font-size: 16px;
+            color: #aaa;
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    <!--虚拟机器列表-->
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet box darkgray">
+
+                <div class="portlet-title">
+                    <div class="caption">
+                        班级管理
+                    </div>
+
+                    <div class="actions">
+                        <a href="#" class="btn btn-default btn-sm btndel">
+                            <i class="fa fa-trash"></i> 删除
+                        </a>
+
+                        <a href="#" class="btn btn-default btn-sm btnrefresh">
+                            <i class="fa fa-refresh"></i> 刷新
+                        </a>
+                    </div>
+                </div>
+
+                <div class="portlet-button">
+                    <a href="#" class="btndel"><i class="fa fa-trash"></i> 删除</a>
+                    <a href="#" class="btnrefresh"><i class="fa fa-refresh"></i> 刷新</a>
+                    <a href="#" class="btnplus" data-toggle="modal" data-target="#addGradeModal"><i class="fa fa-plus"></i> 新建班级</a>
+
+                </div>
+
+                <div class="portlet-body">
+                    <table class="table table-striped table-bordered table-hover" id="sample_2">
+                        <thead>
+                        <tr>
+                            <th class="table-checkbox" width="40">
+                                <input type="checkbox" class="group-checkable" data-set="#sample_2 .checkboxes"/>
+                            </th>
+                            <th>序号</th>
+                            <th>班级名称</th>
+                            <th>班级人数</th>
+                            <th>说明</th>
+                            <th width="250">操作</th>
+
+                        </tr>
+                        </thead>
+
+                        <tbody id="gradelist">
+                            {% for grade in gradeclass%}
+                            <tr class="odd gradeX">
+                                <td>
+                                    <input class="checkboxes" data_grade_id={{ grade.id }} type="checkbox" value="">
+                                </td>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{grade.name}}</td>
+                                <td>{{ grade.totals }}</td>
+                                <td>{{ grade.description }}</td>
+                                <td>
+                                    <button data-toggle="modal" type="button" class="btn btn-sm btn-default">
+                                    <a href="/cloudclass/student_list/?id={{ grade.id }}">查 看</a></button>
+                                    <button data_grade_id={{ grade.id }}  type="button" class="btn btn-sm btn-primary editgrade">编 辑</button>
+                                    <button data_grade_id={{ grade.id }} type="button" class="btn btn-sm btn-danger btn_delete">删 除</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+    </div>
+
+    <!--addmodal-->
+    <div class="modal fade" id="addGradeModal" tabindex="-1" role="dialog" aria-labelledby="addGrade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>添加班级</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="addGradeForm">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"><span class="red">*</span>
+                                {{ Grade.gradename.label }}
+                            </label>
+                            <div class="col-sm-7">
+                                {{ Grade.gradename }}
+                            </div>
+                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="班级名称不能为空"></i>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                                {{ Grade.gradeinfo.label }}
+                            </label>
+                            <div class="col-sm-7">
+                                {{ Grade.gradeinfo }}
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" id="addGradeFormSave">保存</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--editmodal-->
+     <div class="modal fade" id="editGradeModal" tabindex="-1" role="dialog" aria-labelledby="editGrade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>修改班级信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="editGradeForm">
+                        {% csrf_token %}
+                        {{ Grade_Edit.grade_id }}
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"><span class="red">*</span>
+                                {{ Grade_Edit.gradename_edit.label }}
+                            </label>
+                            <div class="col-sm-7">
+                                {{ Grade_Edit.gradename_edit }}
+                            </div>
+                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="班级名称不能为空"></i>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                                {{ Grade_Edit.gradeinfo_edit.label }}
+                            </label>
+                            <div class="col-sm-7">
+                                {{ Grade_Edit.gradeinfo_edit }}
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" id="editGradeFormSave">保存</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+
+    <script type="text/javascript">
+
+        $("[data-toggle='tooltip']").tooltip();
+        common.initmenu("teacher", "gradelist");
+
+        function get_gradeclass(id){
+            var opt = {
+                    "url": "{% url 'ajax_get_gradeclass' %}",
+                    "data": {"id": id},
+                    "async": true
+                };
+                common.ajaxpostrequest(opt, function(rsp){
+                    if(rsp.code == 1){
+                        var data = rsp.message;
+                        $("#id_gradename_edit").val(data.name);
+                        $("#id_gradeinfo_edit").val(data.desc);
+                    }
+                })
+        }
+
+        $(".editgrade").each(function() {
+            $(this).bind("click", function () {
+                $("#id_grade_id").val($(this).attr("data_grade_id"));
+                var modal_div = $("#editGradeModal");
+                modal_div.modal("show");
+
+                var id = $(this).attr("data_grade_id");
+                get_gradeclass(id);
+            })
+        });
+
+        $(".btn_delete").on("click", function(){
+            var grade_id = $(this).attr("data_grade_id");
+            $.MsgBox.Confirm("提示", "确定删除? 删除班级将删除该班级下的所有学生账号！",function() {
+                var opt = {
+                    "url": "{% url 'ajax_delete_gradeclass' %}",
+                    "data": {"id": grade_id},
+                    "async": true
+                };
+                common.ajaxpostrequest(opt, function(rsp) {
+                    if (rsp.code == 1) {
+                        location.reload();
+                    }
+                })
+            })
+         });
+
+        $("#addGradeForm").bootstrapValidator({
+            feedbackIcons: {
+                valid: 'fa fa-check',
+                invalid: 'fa fa-remove',
+                validating: 'fa fa-refresh'
+            },
+            fields: {
+                gradename: {
+                    validators: {
+                        notEmpty: {
+                            message: "班级名称不能为空"
+                        },
+                        stringLength: {
+                            max: 10,
+                            message: "班级名称长度不能超过10个字符"
+                        }
+                    }
+                },
+                gradeinfo: {
+                    validators: {
+                        stringLength: {
+                            max: 50,
+                            message: "班级说明长度不能超过50个字符"
+                        }
+                    }
+                }
+            }
+        }).on("success.form.bv", function(e){
+            e.preventDefault();
+            var $form = $(e.target);
+
+                 var opt = {
+                    "url": "{% url 'ajax_add_gradeclass' %}",
+                    "data": $form.serialize(),
+                    "async": true
+                };
+                common.ajaxpostrequest(opt, function(rsp){
+                    if(rsp.code == 1){
+                        location.reload();
+                    }else{
+                        $.MsgBox.Alert("提示",rsp.message);
+                    }
+            })
+        });
+
+
+        $("#editGradeForm").bootstrapValidator({
+            feedbackIcons: {
+                valid: 'fa fa-check',
+                invalid: 'fa fa-remove',
+                validating: 'fa fa-refresh'
+            },
+            fields: {
+                gradename_edit: {
+                    validators: {
+                        notEmpty: {
+                            message: "班级名称不能为空"
+                        },
+                        stringLength: {
+                            max: 10,
+                            message: "班级名称长度不能超过10个字符"
+                        }
+                    }
+                },
+                gradeinfo_edit: {
+                    validators: {
+                        stringLength: {
+                            max: 50,
+                            message: "班级说明长度不能超过50个字符"
+                        }
+                    }
+                }
+            }
+        }).on("success.form.bv", function(e){
+            e.preventDefault();
+            var $form = $(e.target);
+
+                var opt = {
+                    "url": "{% url 'ajax_update_gradeclass' %}",
+                    "data": $form.serialize(),
+                    "async": true
+                };
+                common.ajaxpostrequest(opt, function(rsp){
+                    if(rsp.code == 1){
+                        location.reload();
+                    }else{
+                        $.MsgBox.Alert("提示", rsp.message);
+                    }
+                });
+        });
+
+     $(".btnrefresh").on("click", function(){
+            notie.alert(1,"刷新班级列表成功!",2);
+            common.reload_page();
+     });
+
+     $(".group-checkable").on("click", function(){
+         common.checkallparent("checkboxes",$(this));
+     });
+
+    $(".btndel").on("click", function(){
+        var checked_class = [];
+        $(".checkboxes").each(function(){
+            if(($(this).parent().hasClass("checked"))){
+                checked_class.push($(this).attr("data_grade_id"));
+            }
+        });
+        var len = checked_class.length;
+        if(!len){
+            $.MsgBox.Alert("提示","至少选择一项!");
+            return
+        }else{
+            $.MsgBox.Confirm("提示", "确定删除? 删除班级将删除该班级下的所有学生账号！",function(){
+                var opt = {
+                    "url": "{% url 'ajax_delete_gradeclass' %}",
+                    "data": {"id": JSON.stringify(checked_class)},
+                    "async": true
+                };
+                common.ajaxpostrequest(opt, function(rsp){
+                    if(rsp.code == 1){
+                        location.reload();
+                    }
+                })
+            })
+        }
+    });
+    </script>
+
+{% endblock script %}

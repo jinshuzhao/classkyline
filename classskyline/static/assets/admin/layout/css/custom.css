@@ -1,0 +1,75 @@
+.darkgray{
+    /*background:#aaa;*/
+    border:1px solid #2374c6;
+    color:#2374c6;
+}
+.darkgray .btn{font-size: 12px;}
+#btnCancelServer:hover{background: lightgray;color:#333;}
+.darkgray label,.darkgray .dataTables_info{color:#a0a0a0;}
+
+.portlet.box.darkgray {
+  border: 1px solid #2b3f60;
+  border-top: 0;
+}
+.page-bar {
+  padding: 0px;
+  background-color: #f7f7f7;
+  margin-bottom: 25px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+}
+.portlet.box > .portlet-title {
+  border-bottom: 0;
+  padding: 0 10px;
+  margin-bottom: 0;
+   color: #fff;
+    background-image: url("../img/new_images/right-title-bg.png");
+    background-size: cover;
+}
+.portlet.box > .portlet-btn{position:absolute;right:30px;top:60px;}
+.portlet.box > .portlet-btn a{color:#2374c6;text-decoration: none;padding:6px 10px;border: 1px solid #2374c6;border-radius: 2px;}
+.portlet.box > .portlet-btn a i{margin-right:5px;}
+.portlet.box > .portlet-btn a:hover{background:#2374c6;color:#fff;}
+.portlet.box > .portlet-button{text-align: right;margin-top:7px;margin-right: 10px;margin-bottom:10px;padding-top:7px;}
+.portlet.box > .portlet-button a{color:#2374c6;text-decoration: none;padding:6px 10px;border: 1px solid #2374c6;border-radius: 2px;}
+.portlet.box > .portlet-button a i{margin-right:5px;}
+.portlet.box > .portlet-button a:hover{background:#2374c6;color:#fff;}
+.fa-6x{
+    font-size:8em;
+    padding-top: 50px;
+}
+.logo-default{
+    width:200px;
+    height: 25px;
+}
+.page-header.navbar.navbar-fixed-top {
+  z-index: 100;
+}
+.sr-only {
+  position: absolute;
+  width: 100px;
+  height: 20px;
+    top:15px;
+    font-size:14px;
+    color:#333;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip:rect(0,100px,20px,0);
+  border: 0;
+
+}
+.progress{
+    height: 40px;
+    /*margin-top:100px;*/
+}
+.progress > .progress-bar-info {
+
+background-image: -moz-linear-gradient(top, #7db72f, #4e7d0e);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#7db72f), to(#4e7d0e));
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#7db72f,endColorstr=#4e7d0e);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#7db72f,endColorstr=#4e7d0e)";
+}

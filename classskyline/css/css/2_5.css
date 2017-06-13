@@ -1,0 +1,54 @@
+.wrapper{
+    width:98%;
+    margin:0 auto;
+}
+
+.sharp{
+    width:30%;
+    margin:20px auto 0;
+    float:left;
+    margin-right:2%;
+}
+
+.content{
+    height:180px;
+    overflow:hidden;
+    border:solid 1px;
+}
+
+.content{
+    border-radius:10px;/* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
+    -webkit-border-radius: 10px;/* Safari 和 Chrome */
+	-moz-border-radius: 10px;/* Firefox */
+}
+
+/*蓝色边框*/
+.color1 .content{
+    background:#EFF7FF;
+    border-color:#96C2F1;
+}
+/*绿色边框*/
+.color2 .content{
+    background:#F0FBEB;
+    border-color:#9BDF70;
+}
+/*绿色边框*/
+.color3 .content{
+    background:#EEFAFF;
+    border-color:#BBE1F1;
+}
+/*绿色边框*/
+.color4 .content{
+    background:#FFFFDD;
+    border-color:#E3E197;
+}
+/*粉色边框*/
+.color5 .content{
+    background:#FFF5FA;
+    border-color:#F8B3D0;
+}
+/*黄色边框*/
+.color6 .content{
+    background:#FFFFF7;
+    border-color:#FFCC00;
+}

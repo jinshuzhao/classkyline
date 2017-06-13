@@ -1,0 +1,429 @@
+{% extends "sitebase.html" %}
+{% load static from staticfiles %}
+
+{% block ext_style %}
+    <style type="text/css">
+        #progress {
+            width: 100%;
+        }
+
+        #progress ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        #progress ul li {
+            float: left;
+            list-style: none;
+            width: 25%;
+        }
+
+        #progress ul li .text {
+            text-align: center;
+            font-size: 18px;
+            padding-top: 13px;
+            padding-bottom: 46px;
+        }
+
+        #circle-progress1, #circle-progress2, #circle-progress3, #circle-progress4 {
+            width: 240px;
+            height: 200px;
+            margin: 0 auto;
+        }
+    </style>
+    <!-- BEGIN PAGE LEVEL STYLES -->
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/global/plugins/select2/select2.css' %}"/>
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.css' %}"/>
+    <!-- END PAGE LEVEL STYLES -->
+{% endblock %}
+
+{% block content %}
+    <!-- BEGIN PAGE HEADER-->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{% url 'dash_board' %}">主页</a>
+            </li>
+        </ul>
+        <div class="page-toolbar">
+
+        </div>
+    </div>
+    <!-- END PAGE HEADER-->
+    <div class="row ">
+        <div class="col-md-12">
+            <div class="portlet box darkgray">
+                <div class="portlet-title">
+                    <div class="caption">概要</div>
+
+                    <div class="tools">
+                        <a href="#" style="color:#fff;">
+                            <label class="class_status" style="color:#fff;"></label>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="portlet-body">
+                    <div class="overview" style="margin-left: 0px;margin-right: 0px;">
+                        <table class="table table-striped table-bordered table-hover">
+                            <tr>
+                                <td>IP地址</td>
+                                <td class="host_ip"></td>
+                                <td>主机型号</td>
+                                <td class="host_model"></td>
+                                <td>CPU数量</td>
+                                <td class="host_cpucount"></td>
+                            </tr>
+                            <tr>
+                                <td>CPU型号</td>
+                                <td class="host_cpumodel"></td>
+                                <td>CPU主频</td>
+                                <td class="host_cpufrequency"></td>
+                                <td>内存</td>
+                                <td class="host_mem"></td>
+                            </tr>
+                            <tr>
+                                <td>状态</td>
+                                <td class="host_status"></td>
+                                <td>版本</td>
+                                <td class="host_version"></td>
+                                <td>系统运行时间</td>
+                                <td class="host_runtime"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="portlet-title" style="border-radius: 0;">
+                    <div class="caption">性能监控</div>
+                </div>
+                <div class="portlet-body">
+                    <div style="padding-top:40px;">
+                        <div id="progress">
+                            <ul>
+                                <li>
+                                    <div id="circle-progress1"></div>
+                                    <div class="text">虚拟机</div>
+                                </li>
+                                <li>
+                                    <div id="circle-progress2"></div>
+                                    <div class="text">CPU</div>
+                                </li>
+                                <li>
+                                    <div id="circle-progress3"></div>
+                                    <div class="text">内存</div>
+                                </li>
+                                <li>
+                                    <div id="circle-progress4"></div>
+                                    <div class="text">磁盘</div>
+                                </li>
+                            </ul>
+                            <div style="clear: both;"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <script src="{% static 'assets/global/plugins/jquery.pulsate.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'assets/global/plugins/jquery.sparkline.min.js' %}" type="text/javascript"></script>
+    <!-- END PAGE LEVEL PLUGINS -->
+    <script type="text/javascript" src="{% static 'assets/global/plugins/select2/select2.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/global/plugins/datatables/media/js/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/global/plugins/yibiaopan/jquery.speedometer.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/global/plugins/yibiaopan/jquery.jqcanvas-modified.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/global/plugins/yibiaopan/excanvas-modified.js' %}"></script>
+    <!--CircleProgress-->
+    <script type="text/javascript" src="{% static 'assets/global/scripts/circleProgress.js' %}"></script>
+    {#    <script src="{% static 'assets/global/scripts/circle-progress.js' %}"></script>#}
+    <script type="text/javascript" src="{% static 'assets/global/plugins/echart/echarts.js' %}"></script>
+    <script type="text/javascript">
+        var vm_text, vm_percentaget, cpu_text, cpu_percentage, mem_text, mem_percentage, disk_text, disk_percentage;
+        function inithostinfo(hostinfo) {
+            $(".host_ip").html(hostinfo["ip"]);
+            $(".host_model").html(hostinfo["hostname"]);
+            $(".host_cpucount").html(hostinfo["cpucount"]);
+            $(".host_cpumodel").html(hostinfo["cpumodel"]);
+            $(".host_cpufrequency").html(hostinfo["cpufrequence"]);
+            $(".host_mem").html(hostinfo["mem"]);
+            var str = "<img src=\"{% static 'assets/admin/layout/img/new_images/close.png' %}\" style=\"margin-right: 5px;\" id=\"state\">停止";
+            if (hostinfo["hoststatus"] == "1") {
+                str = "<img src=\"{% static 'assets/admin/layout/img/new_images/run.png' %}\" style=\"margin-right: 5px;\" id=\"state\">运行";
+            }
+            $(".host_status").html(str);
+            $(".host_version").html(hostinfo["cvkversion"]);
+            $(".host_runtime").html(hostinfo["runtime"]);
+        }
+
+        function get_course_status() {
+            var opt = {"url": "{% url 'get_courses' %}", data: null, async: true};
+            common.ajaxgetrequest(opt, function (rsp) {
+                courses = rsp["courses"];
+                var uuid = 0;
+                for (i = 0; i < courses.length; i++) {
+                    course = courses[i];
+                    if (course.state == "2") {
+                        uuid = 1;
+                        break;
+                    }
+                }
+                if (uuid == 0) {
+                    $(".class_status").html("已下课");
+                }
+                else {
+                    $(".class_status").html("上课中");
+                }
+            })
+        }
+
+        var myChart, myChart0, myChart1, myChart2;
+        var option, option0, option1, option2;
+        // 路径配置
+        require.config({
+            paths: {
+                echarts: "{% static 'assets/global/plugins/echart' %}"
+            }
+        });
+
+        // 使用
+        require(
+                [
+                    'echarts',
+                    'echarts/chart/pie' // 使用柱状图就加载bar模块，按需加载
+                ],
+                function (ec) {
+                    // 基于准备好的dom，初始化echarts图表
+                    myChart = ec.init(document.getElementById('circle-progress1'));
+                    myChart0 = ec.init(document.getElementById('circle-progress2'));
+                    myChart1 = ec.init(document.getElementById('circle-progress3'));
+                    myChart2 = ec.init(document.getElementById("circle-progress4"));
+
+                    var labelTop = {
+                        normal: {
+                            label: {
+                                show: true,
+                                position: 'center',
+                                formatter: '{b}',
+                                textStyle: {
+                                    baseline: 'bottom'
+                                }
+                            },
+                            labelLine: {
+                                show: false
+                            }
+                        }
+                    };
+                    var labelFromatter = {
+                        normal: {
+                            label: {
+                                formatter: function (params) {
+                                    return  '%'
+                                },
+                                textStyle: {
+                                    baseline: 'top',
+                                    fontSize:16,
+                                    color:'#DC6929',
+                                    fontWeight:800
+                                }
+                            },
+                             color:'#DC6929'
+                        }
+                    };
+                     var vmlabelFromatter = {
+                        normal: {
+                            label: {
+                                formatter: function (params) {
+                                    return  params.name;
+                                },
+                                textStyle: {
+                                    baseline: 'top',
+                                      fontSize:16,
+                                    color:'#DC6929',
+                                    fontWeight:800
+                                }
+                            },
+                             color:'#49A529'
+                        }
+                    };
+
+                    var labelBottom = {
+                        normal: {
+                            color: '#ccc',
+                            label: {
+                                show: true,
+                                position: 'center',
+                                 textStyle: {
+                                    baseline: 'top',
+                                      fontSize:16,
+                                    color:'#DC6929',
+                                    fontWeight:800
+                                }
+                            },
+                            labelLine: {
+                                show: false
+                            }
+                        },
+                        emphasis: {
+                            color: 'rgba(0,0,0,0)'
+                        }
+                    };
+                    var radius = [70, 55];
+                     option = {
+                        series: [
+                            {
+                                type: 'pie',
+                                center: ['50%', '50%'],
+                                radius: radius,
+                                x: '0%', // for funnel
+                                itemStyle: vmlabelFromatter,
+                                data: [
+                                    {name: '', value: 0, itemStyle: labelBottom},
+                                    {name: '', value: 0, itemStyle: labelTop}
+                                ]
+                            }
+                        ]
+                    };
+                    option0 = {
+                        series: [
+                            {
+                                type: 'pie',
+                                center: ['50%', '50%'],
+                                radius: radius,
+                                x: '0%', // for funnel
+                                itemStyle: labelFromatter,
+                                data: [
+                                    {name: '', value: 0, itemStyle: labelBottom},
+                                    {name: '', value: 0, itemStyle: labelTop}
+                                ]
+                            }
+                        ]
+                    };
+                    option1 = {
+                        series: [
+                            {
+                                type: 'pie',
+                                center: ['50%', '50%'],
+                                radius: radius,
+                                x: '0%', // for funnel
+                                itemStyle: labelFromatter,
+                                data: [
+                                    {name: '', value: 0, itemStyle: labelBottom},
+                                    {name: '', value: 0, itemStyle: labelTop}
+                                ]
+                            }
+                        ]
+                    };
+                    option2 = {
+                        series: [
+                            {
+                                type: 'pie',
+                                center: ['50%', '50%'],
+                                radius: radius,
+                                x: '0%', // for funnel
+                                itemStyle: vmlabelFromatter,
+                                data: [
+                                    {name: '', value: 0, itemStyle: labelBottom},
+                                    {name: '', value: 0, itemStyle: labelTop}
+                                ]
+                            }
+                        ]
+                    };
+
+                    // 为echarts对象加载数据
+                    myChart.setOption(option);
+                    myChart0.setOption(option0);
+                    myChart1.setOption(option1);
+                    myChart2.setOption(option2);
+                }
+        );
+
+        function getmonitorinfo() {
+            var opt = {url: "{% url 'ajax_get_host_monitor' %}", data: null, async: true};
+            //loading();
+
+            common.ajaxpostrequest(opt, function (rsp) {
+                if (rsp['authed']) {
+                    if (rsp["rsp"]) {
+                        spinner.stop();
+                        $(".bg").fadeOut(1000);
+                        var info = rsp["rsp"];
+                        cpu_text = info["cpu"];
+                        cpu_percentage = parseFloat(info["cpu"]).toFixed(2);
+                        //mem_text=info["mem"]+"%";
+                        mem_text = info["mem"];
+                        mem_percentage = parseFloat(info["mem"]).toFixed(2);
+                        disk_percentage = parseFloat(info["diskrate"]).toFixed(2);
+                        //disk_text=(parseFloat(info["disktotal"])*parseFloat(info["diskrate"])/100).toFixed(0)+"/"+parseInt(info["disktotal"])+"G";
+                        disk_text = info["diskrate"];
+                        //disk_rate = (parseFloat(info["disktotal"]) * parseFloat(info["diskrate"]) / 100).toFixed(0);
+                        disk_total = parseFloat(info["disktotal"]).toFixed(2) + "G";
+                        var disk_use = (parseFloat(info["disktotal"]) * disk_percentage / 100).toFixed(2);
+                        //todo 初始化概要信息
+                        var hostinfo = info["hostinfo"];
+                        inithostinfo(hostinfo);
+                        vm_percentaget = parseInt(info["vmrun"]) / parseInt(info["vmtotal"]) * 100;
+                        //vm_text=rsp["vm_run"]+"/"+rsp["vm_count"]+"台";
+                        vm_run = info["vmrun"] + "台";
+                        vm_count = info["vmtotal"] + "台";
+                        vm_runtime = info["hostinfo"]["runtime"];
+                        console.log(vm_percentaget);
+                        option.series[0].data[0].name = vm_count;
+                        option.series[0].data[0].value = 100 - vm_percentaget;
+                        option.series[0].data[1].name = vm_run;
+                        option.series[0].data[1].value = vm_percentaget;
+                        myChart.setOption(option);
+                        //cpu
+                        var cpuused = cpu_percentage;
+
+                        option0.series[0].data[0].name = "%";
+                        option0.series[0].data[0].value = 100 - cpuused;
+                        option0.series[0].data[1].name = cpuused;
+                        option0.series[0].data[1].value = cpuused;
+                        myChart0.setOption(option0);
+                        //mem
+                        var memused = mem_percentage;
+                        option1.series[0].data[0].name = "%";
+                        option1.series[0].data[0].value = 100 - memused;
+                        option1.series[0].data[1].name = memused;
+                        option1.series[0].data[1].value = memused;
+                        myChart1.setOption(option1);
+                        //disk
+                        var diskused = disk_percentage;
+                        option2.series[0].data[0].name = disk_total;
+                        option2.series[0].data[0].value = 100 - diskused;
+                        option2.series[0].data[1].name = disk_use + "G";
+                        option2.series[0].data[1].value = diskused;
+                        myChart2.setOption(option2);
+                    }
+                } else {
+                    window.location.href = "{% url 'login' %}";
+                }
+
+            })
+        }
+
+        $(document).ready(function () {
+            loading();
+            getmonitorinfo();
+            setInterval(getmonitorinfo, 5000);// getmonitorinfo();
+
+            //性能监控兼容不同的分辨率
+            var width=$("#progress").css("width").split("px")[0];
+            if(width<960&&width>=480)
+            {
+                $("#progress ul li").css("width","50%");
+            }
+            else if(width<480)
+            {
+                $("#progress ul li").css("width","100%");
+            }
+        })
+    </script>
+{% endblock script %}

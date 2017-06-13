@@ -1,0 +1,535 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<!-- 
+Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.0
+Version: 3.5
+Author: KeenThemes
+Website: http://www.keenthemes.com/
+Contact: support@keenthemes.com
+Follow: www.twitter.com/keenthemes
+Like: www.facebook.com/keenthemes
+Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes
+License: You must have a valid license purchased only from themeforest(the above link) in order to legally use the theme for your project.
+-->
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en" class="no-js">
+<!--<![endif]-->
+<!-- BEGIN HEAD -->
+<head>
+    <meta charset="utf-8"/>
+    <title>云学堂管理平台</title>
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9">-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="renderer" content="webkit">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <meta content="" name="description"/>
+    <meta content="" name="author"/>
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <link href="{% static 'assets/admin/layout/css/googlefonts.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/global/plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <link href="{% static 'assets/global/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/global/plugins/uniform/css/uniform.default.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <!-- END GLOBAL MANDATORY STYLES -->
+    <!-- BEGIN PAGE LEVEL PLUGIN STYLES -->
+    <!-- END PAGE LEVEL PLUGIN STYLES -->
+    <!-- BEGIN PAGE STYLES -->
+    <link href="{% static 'assets/admin/pages/css/tasks.css' %}" rel="stylesheet" type="text/css"/>
+    <!-- END PAGE STYLES -->
+    <!-- BEGIN THEME STYLES -->
+    <!-- DOC: To use 'rounded corners' style just load 'components-rounded.css' stylesheet instead of 'components.css' in the below style tag -->
+    <link href="{% static 'assets/global/css/components-rounded.css' %}" id="style_components" rel="stylesheet"
+          type="text/css"/>
+    <link href="{% static 'assets/global/css/plugins.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/admin/layout/css/layout.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/admin/layout/css/themes/darkblue.css' %}" rel="stylesheet" type="text/css"
+          id="style_color"/>
+    <link href="{% static 'assets/global/plugins/dialog/jquery_dialog.css' %}" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="{% static 'assets/global/plugins/bootstrapvalidator/css/bootstrapValidator.min.css' %}">
+    <link href="{% static 'assets/admin/layout/css/custom.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/global/css/pagination.css' %}" rel="stylesheet"/>
+
+    {% block head_style %}
+        <style type="text/css">
+            .bg {
+                display: none;
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                /*background: #333;*/
+                z-index: 300000;
+                top: 0;
+                left: 0;
+                /*opacity: 0.5;*/
+            }
+
+            .alert {
+                width: 55%;
+                float: left;
+                color: #F6B500;
+                font-size: 14px;
+                background: #697E9D;
+                height: 35px;
+                top: 5px;
+                padding: 5px !important;
+                text-indent: 12px;
+                position: fixed;
+
+                opacity: 0.8;
+
+            }
+
+            .alert strong {
+                margin-right: 10px;
+            }
+
+            .alert span {
+                font-size: 16px;
+                margin: 0 20px;
+                color: #fff;
+                font-weight: bold;
+            }
+
+            .alert button {
+                background: none !important;
+                border: none;
+                float: right;
+            }
+
+            .alert button:focus {
+                outline: none;
+            }
+
+            .alert i {
+                float: right;
+
+            }
+
+            .form-control-feedback {
+                margin-top: 10px;
+            }
+
+            html {
+                height:100%;
+                overflow: auto;
+            }
+
+            body {
+                height:100%;
+            }
+
+            .page-content {
+                padding-bottom:75px !important;
+            }
+
+            /* tooltip */
+            .tooltip.top .tooltip-arrow {
+                border-top-color: #ff0000;
+            }
+            .photo .tooltip-inner {
+                background-color: #ff0000;
+            }
+        </style>
+    {% endblock head_style %}
+    {% block ext_style %}{% endblock %}
+    <!-- END THEME STYLES -->
+</head>
+<body class="page-header-fixed page-quick-sidebar-over-content page-style-square " id="mainload">
+<!-- BEGIN HEADER -->
+<div class="page-header navbar navbar-fixed-top">
+    <!-- BEGIN HEADER INNER -->
+    <div class="page-header-inner">
+        <!-- BEGIN LOGO -->
+        <div class="page-logo">
+            <a href="{% url 'dash_board' %}">
+                <img src="{% static 'assets/admin/layout/img/new_images/logo2.png' %}" style="height:30px;">
+            </a>
+
+            <div class="menu-toggler sidebar-toggler hide">
+                <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
+            </div>
+        </div>
+        <!-- END LOGO -->
+        <div class="sidebar-toggler" style="float:left;display: none;"><a href="javascript:" class="fa fa-outdent"></a></div>
+        <!-- BEGIN RESPONSIVE MENU TOGGLER-->
+        <a href="javascript:" class="menu-toggler responsive-toggler" data-toggle="collapse"
+           data-target=".navbar-collapse">
+        </a>
+        <!-- END RESPONSIVE MENU TOGGLER -->
+        <!-- BEGIN TOP NAVIGATION MENU -->
+        <div style="margin-left: 235px;/*background-image: url('../static/assets/admin/layout/img/new_images/top-bg.png');background-size: cover;*/background:#2f4461;height:46px;">
+            <div class="alert course_alert" style="display: none;">
+                <button type="button" data-dismiss="alert"><i class="fa fa-times"></i></button>
+                <strong>正在上课</strong> 当前课程：<span
+                    class="current_course"></span>{#   课程进度：<span class="current_progress">100%</span>#}
+            </div>
+            {# cas连接中断警告 #}
+            <div class="alert alert-danger" id="cas_conn_warn" role="alert" style="display: none">
+                <strong>CAS无法连接!</strong> 请检查网络和设置是否正确,若CAS设置有变动可进入 <a href="{% url 'sys_settings' %}">系统设置</a> 进行修改！
+            </div>
+            <div class="top-menu">
+                <ul class="nav navbar-nav pull-right">
+                    <li class="dropdown dropdown-extended dropdown-inbox">
+                        <a href="#" onclick="reboot()" style="color:#1ccbb7; font-size: 14px">
+                            <i class="fa fa-undo" style="transform: rotateY(180deg);"></i> 重启
+                        </a>
+                    </li>
+                    <li class="dropdown dropdown-extended dropdown-inbox">
+                        <a href="#" onclick="shutoff()" style="color:#cc9105; font-size: 14px">
+                            <i class="fa fa-power-off"></i> 关机
+                        </a>
+                    </li>
+                    <li class="dropdown dropdown-extended dropdown-inbox">
+                        <a href="/static/help/index.html" target="_blank" style="color:#db6c27; font-size: 14px">
+                            <i class="fa fa-question"></i> 帮助
+                        </a>
+                    </li>
+                    <!-- BEGIN USER LOGIN DROPDOWN -->
+                    <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                    <li class="dropdown dropdown-user">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
+                           data-close-others="true">
+                            <span class="username username-hide-on-mobile">{% firstof user.get_username %}</span>
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-default">
+                            <li>
+                                <a href="#" class="changepwd">
+                                    <img src="{% static 'assets/admin/layout/img/new_images/top-pwd-icon1.png' %}" style="margin-right: 6px;"> 修改密码 </a>
+                            </li>
+
+                            <li class="divider">
+                            </li>
+                            <li>
+                                <a href="{% url 'logout' %}">
+                                    <img src="{% static 'assets/admin/layout/img/new_images/top-user-logout1.png' %}" style="margin-right: 6px;">注销 </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- END USER LOGIN DROPDOWN -->
+                </ul>
+            </div>
+        </div>
+        <!-- END TOP NAVIGATION MENU -->
+    </div>
+    <!-- END HEADER INNER -->
+</div>
+<!-- END HEADER -->
+<div class="clearfix">
+</div>
+<!-- BEGIN CONTAINER -->
+<div class="page-container">
+    <!-- BEGIN SIDEBAR -->
+    <div class="page-sidebar-wrapper">
+        <div class="logo">
+            <a href="#"><img src="{% static 'assets/admin/layout/img/new_images/logo2.png' %}"></a>
+        </div>
+        <div class="page-sidebar navbar-collapse collapse">
+            <!-- BEGIN SIDEBAR MENU -->
+            <!-- DOC: Apply "page-sidebar-menu-light" class right after "page-sidebar-menu" to enable light sidebar menu style(without borders) -->
+            <!-- DOC: Apply "page-sidebar-menu-hover-submenu" class right after "page-sidebar-menu" to enable hoverable(hover vs accordion) sub menu mode -->
+            <!-- DOC: Apply "page-sidebar-menu-closed" class right after "page-sidebar-menu" to collapse("page-sidebar-closed" class must be applied to the body element) the sidebar sub menu mode -->
+            <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
+            <!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
+            <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
+            <ul class="page-sidebar-menu page-sidebar-menu-closed" data-keep-expanded="false" data-auto-scroll="true"
+                data-slide-speed="200">
+
+                <li class="start active  dashboard" style="margin-top:0;">
+                    <a href="{% url 'dash_board' %}">
+                        <span class="home-icon icon"></span>
+                        <span class="title">主页</span>
+                        <span class="arrow "></span>
+                        <div class="clearfix"></div>
+                    </a>
+                </li>
+                {% if user.is_superuser %}
+                <li class="images">
+                    <a href="{% url 'images' %}">
+                        <span class="base-icon icon"></span>
+                        <span class="title">镜像</span>
+                        <span class="arrow"></span>
+                        <div class="clearfix"></div>
+                    </a>
+                </li>
+                {% endif %}
+                <li class="course">
+                    <a href="{% url 'courses' %}">
+                        <span class="course-icon icon"></span>
+                        <span class="title">课程</span>
+                        <span class="arrow"></span>
+                        <div class="clearfix"></div>
+                    </a>
+                </li>
+                <li class="desktop">
+                    <a href="{% url 'desktop_list' %}">
+                        <span class="desktop-icon icon"></span>
+                        <span class="title">云桌面</span>
+                        <span class="arrow "></span>
+                        <div class="clearfix"></div>
+                    </a>
+                </li>
+                <li class="teacher">
+                    <a href="{% url 'teacher_list' %}">
+                        <span class="teacher-icon icon"></span>
+                        <span class="title">账户</span>
+                        <span class="arrow"></span>
+                        <div class="clearfix"></div>
+                    </a>
+                     <ul class="level2 page-sidebar-menu" >
+                         <li class="teachersub"><a href="{% url 'teacher_list' %}">教师管理</a> </li>
+                        <li class="gradelist"><a href="{% url 'grade_list' %}">班级管理</a> </li>
+                        <li class="studentlist"><a href="{% url 'student_list' %}">学生管理</a> </li>
+
+                    </ul>
+                </li>
+                {% if user.is_superuser %}
+                <li class="network">
+                    <a href="{% url 'network_list' %}">
+                        <span class="network-icon icon"></span>
+                        <span class="title">网络 </span>
+                        <span class="arrow"></span>
+                        <div class="clearfix"></div>
+                    </a>
+                </li>
+                <li class="log">
+                    <a href="{% url 'sys_settings' %}">
+                        <span class="log-icon icon"></span>
+                        <span class="title">管理 </span>
+                        <span class="arrow "></span>
+                        <div class="clearfix"></div>
+                    </a>
+                    <ul class="level2 page-sidebar-menu" >
+                        <li class="syssettings"><a href="{% url 'sys_settings' %}">系统设置</a> </li>
+                        <li class="logs"><a href="{% url 'logs' %}">日志下载</a> </li>
+                        <li class="sysupgrade"><a href="{% url 'sys_upgrade' %}">升级包管理</a> </li>
+                        <li class="license"><a href="{% url 'license' %}">License管理</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+            </ul>
+            <!-- END SIDEBAR MENU -->
+        </div>
+        <div style="clear: both;"></div>
+        <div class="versioninfo" style="text-align: center;width:100%;margin-top: 20px;position:relative;">
+            {% load version_tags %}
+            <span style="color:#fff;text-align: center;font-weight: 800;">版本信息：{{ '' | get_app_version }}</span>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+    <!-- END SIDEBAR -->
+    <!-- BEGIN CONTENT -->
+    <div class="page-content-wrapper">
+        <div class="page-content" style="min-height:933px;">
+            <!--page content start-->
+            {% block content %}
+            {% endblock content %}
+            <!--page content end-->
+        </div>
+    </div>
+</div>
+<div class="bg"></div>
+<!-- END CONTAINER -->
+
+<!-- END FOOTER -->
+<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+<!-- BEGIN CORE PLUGINS -->
+<!--[if lt IE 9]
+<script src="{% static 'assets/global/plugins/respond.min.js' %}"></script>
+<script src="{% static 'assets/global/plugins/excanvas.min.js' %}"></script>
+<![endif]-->
+<script src="{% static 'assets/global/plugins/respond.min.js' %}"></script>
+
+<script src="{% static 'assets/global/plugins/jquery.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/scripts/jquery_csrf.js' %}"></script>
+<script src="{% static 'assets/global/plugins/jquery-migrate.min.js' %}" type="text/javascript"></script>
+<!-- IMPORTANT! Load jquery-ui-1.10.3.custom.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
+<script src="{% static 'assets/global/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js' %}"
+        type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/bootstrap/js/bootstrap.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}"
+        type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/jquery.blockui.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/jquery.cokie.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/uniform/jquery.uniform.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js' %}" type="text/javascript"></script>
+<!-- END CORE PLUGINS -->
+
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="{% static 'assets/global/scripts/metronic.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/admin/layout/scripts/layout.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/admin/layout/scripts/quick-sidebar.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/admin/layout/scripts/demo.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/admin/pages/scripts/index.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/admin/pages/scripts/tasks.js' %}" type="text/javascript"></script>
+
+<script src="{% static 'assets/global/scripts/spiner.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/scripts/common.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/global/plugins/bootstrapvalidator/js/bootstrapValidator.min.js' %}"></script>
+
+<script src="{% static 'assets/global/plugins/dialog/jquery_dialog.js' %}"></script>
+<!--提示框-->
+<script type="text/javascript" src="{% static 'assets/global/scripts/Mbox.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/global/scripts/circle-progress.js' %}"></script>
+<!-- notiejs 插件-->
+<script type="text/javascript" src="{% static 'assets/global/plugins/notie.js' %}"></script>
+
+<!--pagination-->
+<script src="{% static 'assets/global/scripts/jquery.pagination.js' %}"></script>
+
+{% block script %}
+
+{% endblock script %}
+<!-- END PAGE LEVEL SCRIPTS -->
+<script>
+    //重启
+    function reboot(){
+        var con=window.confirm("确定要重新启动服务器吗?");
+        if(con){
+            var option={"url":"{% url 'ajax_reboot_host' %}","data":null,"async":true};
+            common.ajaxpostrequest(option,function(rsp){
+                if(rsp["result"]=="ok"){
+                    alert("重新启动服务器成功");
+                }
+            })
+        }
+    }
+    //关机
+    function shutoff(){
+         var con=window.confirm("确定要关闭服务器吗?");
+        if(con){
+            var option={"url":"{% url 'ajax_shutoff_host' %}","data":null,"async":true};
+            common.ajaxpostrequest(option,function(rsp){
+                if(rsp["result"]=="ok"){
+                    alert("关闭服务器成功");
+                }
+            })
+        }
+    }
+    //实时检查课程状态，并更新信息
+    function courseStatus() {
+        var setstatus = localStorage.getItem("courseset");
+        var status = "notonclass";
+        var coursename = "";
+        $.ajax({
+            url: "{%  url 'get_courses' %}",
+            data: null,
+            type: "GET",
+            dataType: "json",
+            timeout: 5000,
+            success: function (data, textStatus) {
+                if (textStatus == "success") { // 请求成功
+                    var courselist = data["courses"];
+                    for (i = 0; i < courselist.length; i++) {
+                        var course = courselist[i];
+
+                        if (course.state == 1) {
+                            status = "preclass";
+                            desc = course.name;
+                            break
+                        }
+                        else if (course.state == 2) {
+                            status = "onclass";
+                            desc = course.name;
+
+                            break
+                        }
+                        else if (course.state == 3) {
+                            status = "endclass";
+                            break
+                        }
+
+                    }
+                    // localStorage.setItem("courseset",status);
+                    if (status == "preclass" || status == "onclass") {
+                        //todo 获取桌面列表
+                        $(".course_alert").show();
+                        $(".current_course").html(desc);
+                    }
+                    else {
+                        $(".course_alert").hide();
+                    }
+                    //todo 停止轮询
+                    if (setstatus == "notips") {
+                        localStorage.setItem("courseset", null);
+                    }
+                    else {
+                        // courseStatus();
+                    }
+
+                }
+            },
+            complete: function (xhr, textStatus) {
+                xhr = null;
+            }
+        });
+    }
+
+    // 测试cas连接是否中断
+    function test_cas_conn(){
+        var opt = {
+            'url': "{% url 'ajax_test_cas_connection' %}"
+        };
+        common.ajaxpostrequest(opt, function(res){
+            if (res['authed']) {
+                if (res['is_conn']) {
+                    $("#cas_conn_warn").hide();
+                } else {
+                    $("#cas_conn_warn").show();
+                }
+
+                if (res['code'] == 403) {
+                    window.location.href = "{% url 'sys_settings' %}";
+                }
+            } else {
+                window.location.href = "{% url 'login' %}";
+            }
+        })
+    }
+
+    jQuery(document).ready(function () {
+        Metronic.init(); // init metronic core componets
+        Layout.init(); // init layout
+        QuickSidebar.init(); // init quick sidebar
+        Demo.init(); // init demo features
+        Index.init();
+
+        Tasks.initDashboardWidget();
+        //loading();
+        $(".changepwd").bind("click", function () {
+            JqueryDialog.Open("修改密码", "{% url 'change_pwd' %}", 800,320);
+        });
+        $(".page-header.navbar .sidebar-toggler").click(function(){
+            if($("body.page-sidebar-closed").hasClass("page-sidebar-closed-hide-logo"))
+            {
+                $("body").removeClass("page-sidebar-closed-hide-logo");
+            }
+            else
+            {
+                $("body").addClass("page-sidebar-closed-hide-logo");
+            }
+        });
+
+        {% block site_polling %}
+        {# 在不需要的页面可以屏蔽掉全局的轮询 #}
+        //setInterval(courseStatus,5000);
+        $(".course_alert button").click(function(){
+            $(".course_alert").css("display","none");
+              localStorage.setItem("courseset","notips");
+        });
+
+        // 监控cas连接状态
+        //test_cas_conn();
+        //setInterval(test_cas_conn, 10000);
+        {% endblock %}
+    });
+</script>
+<!-- END JAVASCRIPTS -->
+</body>
+<!-- END BODY -->
+</html>

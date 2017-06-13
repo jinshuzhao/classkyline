@@ -1,0 +1,47 @@
+h1{font-size: 16px}
+
+#menu{
+    width: 965px;
+    height: 126px;
+    background: url(../images/bg6.jpg) no-repeat right bottom;
+}
+
+ul li{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+ul{
+    float: right;
+    margin-right: 0;
+    margin-top: 55px;
+    width: 790px;
+    font-size: 12px;
+}
+
+li{
+    float: left;
+    width: 36px;
+    padding: 0 0 4px 0;
+    text-align: center;
+    background: url(../images/line1.gif) no-repeat left center;
+}
+
+li:nth-child(3n+1){
+    font-weight: bold;
+    background: none;
+}
+
+li:nth-child(55){
+    font-size: 1px;
+    font-weight: normal;
+}
+
+li:nth-child(22n+1){
+    margin-left: -1px;
+}
+
+li:nth-child(20){
+    color: red;
+}

@@ -1,0 +1,71 @@
+h1{font-size: 20px}
+
+form{
+    width: 615px;
+    height: 450px;
+    background: url(../images/bg8.png) no-repeat center;
+    padding: 12px 0 12px 40px;
+}
+
+fieldset{
+    border: none;
+}
+
+fieldset legend{display: none;}
+
+#textfield{
+    width: 16em;
+    position: relative;
+    border: 1px solid #aaa;
+    top: -3px;
+}
+
+#textarea{
+    width: 30em;
+    height: 3em;
+    border: 1px solid #aaa;
+}
+
+.checkbox{
+    border: solid 1px #d8bca9;
+    position: relative;
+    top: 3px;
+    left: -2px;
+}
+
+select{
+    border: 1px solid #d8bca9;
+}
+
+.radio{
+    border: 1px solid #d8bca9;
+    position: relative;
+    top: 3px;
+    left: -1px;
+}
+
+.title{
+    display: block;
+    font-weight: bold;
+}
+
+.top{
+    margin-top: 80px;
+}
+
+.center{
+    text-align: center;
+}
+
+.red{
+    color: red;
+    margin-left: -10px;
+    padding-right:2px ;
+}
+
+.error{
+    color: white;
+    background: red;
+    padding: 2px;
+    margin: 0 4px;
+}

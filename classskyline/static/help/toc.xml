@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<toc label="欢迎使用H3C云学堂管理平台联机帮助" topic="html/sysIntro.html">
+  <topic label="系统简介" href="html/welcomesysIntro.html">
+  </topic>
+  <topic label="云主机监控" href="html/HostMonitor.html">
+  </topic>
+  <topic label="镜像管理" href="html/ImageMgmt.html">
+  </topic>
+  <topic label="课程管理" href="html/ClassTemple.html">
+  </topic>
+  <topic label="云桌面管理" href="html/desktopMgmt.html">
+  </topic>
+  <topic label="账户管理" href="html/UserMgmt.html">
+  </topic>
+  <topic label="网络管理" href="html/NetworkMgmt.html">
+  </topic>
+  <topic label="系统管理" href="html/SystemMgmt.html">
+    <topic label="系统设置" href="html/SystemMgmt/SystemSet.html">
+    </topic>
+    <topic label="日志下载" href="html/SystemMgmt/LogDownload.html">
+    </topic>
+    <topic label="升级包管理" href="html/SystemMgmt/Upgrade.html">
+    </topic>
+    <topic label="License管理" href="html/SystemMgmt/LicenseMgmt.html">
+      <topic label="查看License详细信息" href="html/SystemMgmt/LicenseMgmt/LicenseDetail.html">
+      </topic>
+      <topic label="正式申请License" href="html/SystemMgmt/LicenseMgmt/RequestLicense.html">
+      </topic>
+      <topic label="注册License" href="html/SystemMgmt/LicenseMgmt/RegisterLicense.html">
+      </topic>
+    </topic>
+  </topic>
+</toc>
+

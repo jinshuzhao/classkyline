@@ -1,0 +1,1076 @@
+{% extends "sitebase.html" %}
+{% load static from staticfiles %}
+
+{% block ext_style %}
+    <!-- BEGIN PAGE LEVEL STYLES -->
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/global/plugins/select2/select2.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.css' %}"/>
+    <!-- END PAGE LEVEL STYLES -->
+
+
+    <style type="text/css">
+        #studentlist > tr > td {
+            line-height: 46px;
+            padding-bottom: 0;
+            padding-top: 0;
+        }
+
+        .fa.fa-info-circle {
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        div.radio {
+            min-height: 41px;
+            margin-right: 5px;
+            margin-top: 0px !important;
+        }
+
+        .radio input[type=radio] {
+            margin-left: -10px;
+        }
+
+        .form-horizontal .radio {
+            padding-top: 0;
+        }
+
+        div.radio span {
+            background-position: 0 -280px;
+        }
+
+        div.radio span.checked {
+            background-position: -72px -280px;
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul li {
+            list-style: none;
+        }
+
+        .droplist .fa.fa-caret-down {
+            position: absolute;
+            top: 6px;
+            left: auto;
+            right: 5px;
+        }
+
+        .modal-footer {
+            text-align: center;
+        }
+
+        input[type=file] {
+            outline: none;
+            margin-top: 5px;
+        }
+
+        .downloadcsv {
+            color: red;
+            font-size: 15px;
+        }
+
+        .darkgray {
+            padding: 4px 10px;
+        }
+
+        .fa.fa-upload {
+            margin-top: 8px;
+            margin-left: 10px;
+        }
+
+        .btn.darkgray:hover, .btn.darkgray:hover i {
+            color: #2374c6;
+        }
+
+        #SWFUpload_0 {
+            top: 0;
+            left: 15px;
+        }
+
+        #stu_csv-queue {
+            position: absolute;
+            top: -15px;
+            left: 120px;
+        }
+
+        .margin-top5 {
+            margin-top: 5px;
+        }
+
+        #id_gender li, #id_gender_edit li {
+            float: left;
+        }
+
+        .red {
+            color: red;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <!--虚拟机器列表-->
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet box darkgray">
+
+                <div class="portlet-title">
+                    <div class="caption">
+                        学生管理
+                    </div>
+
+                    <div class="actions">
+                        <a href="#" class="btn btn-default btn-sm btndel">
+                            <i class="fa fa-trash"></i> 删除
+                        </a>
+
+                        <a href="#" class="btn btn-default btn-sm btnrefresh">
+                            <i class="fa fa-refresh"></i> 刷新
+                        </a>
+                    </div>
+                </div>
+
+                <div class="portlet-button">
+
+                    <!--<select><option>请选择班级</option><option>班级一</option></select>-->
+                    <ul class="select">
+                        <li class="droplist">
+                            <a href="javascript:void(0)" class="currentgrade">
+                                <span>请选择班级</span>
+                                <i class="fa fa-caret-down"></i>
+                            </a>
+                            <ul class="option selectOption">
+                                {% for grade in gradeclass %}
+                                    <li><a href="/cloudclass/student_list/?id={{ grade.id }}"
+                                           flag={{ grade.id }} title={{ grade.name }}>{{ grade.name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    </ul>
+                    <a href="#" class="btndel"><i class="fa fa-trash"></i> 删除</a>
+                    <a href="#" class="btnrefresh"><i class="fa fa-refresh"></i> 刷新</a>
+                    <a href="#" class="btnplus" data-toggle="modal" data-target="#addStudentModal"><i
+                            class="fa fa-plus"></i> 新建学生</a>
+                    <a href="#" class="btnsearch" data-toggle="modal" data-target="#searchStuModal">
+                        <i class="fa fa-search"></i> 搜索</a>
+                    <a href="#" class="btnupload"><i class="fa fa-upload"></i> 导入学生</a>
+                    <a href="/cloudclass/export_students_csv?id={{ grade_id }}" class="btnDownload" data-toggle="modal"><i
+                            class="fa fa-download"></i> 导出学生</a>
+                </div>
+
+                <div class="portlet-body">
+                    <table class="table table-striped table-bordered table-hover" id="sample_2">
+                        <thead>
+                        <tr>
+                            <th class="table-checkbox" width="40">
+                                <input type="checkbox" class="group-checkable" data-set="#sample_2 .checkboxes"/>
+                            </th>
+                            <th>序号</th>
+                            <th>姓名</th>
+                            <th>学号</th>
+                            <th>性别</th>
+                            <th>一卡通卡号</th>
+                            <th>班级</th>
+                            <th>学生机编号</th>
+                            <th width="300">操作</th>
+                        </tr>
+                        </thead>
+
+                        <tbody id="studentlist">
+                        {% for student in students %}
+                            <tr>
+                                <td>
+                                    <input class="checkboxes" data_student_id={{ student.id }} type="checkbox">
+                                </td>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ student.name }}</td>
+                                <td>{{ student.num }}</td>
+                                {% if student.gender == 1 %}
+                                    <td><img src="{% static 'assets/admin/layout/img/new_images/stu_male.png' %}"></td>
+                                {% else %}
+                                    <td><img src="{% static 'assets/admin/layout/img/new_images/stu_female.png' %}">
+                                    </td>
+                                {% endif %}
+                                <td>{{ student.idcard }}</td>
+                                <td>{{ student.grade.name }}</td>
+                                <td>{% if student.stu_vm_number %} {{ student.stu_vm_number }}{% endif %}</td>
+                                <td>
+                                    <button data_student_id={{ student.id }} type="button"
+                                            class="btn btn-sm btn-default resetpwd">修改密码
+                                    </button>
+                                    <button data_student_id={{ student.id }}  type="button"
+                                            class="btn btn-sm btn-primary editstudent">编 辑
+                                    </button>
+                                    <button data_student_id={{ student.id }} type="button"
+                                            class="btn btn-sm btn-danger btn_delete">删 除
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="clear"></div>
+                    <div class="pagination marginTop">
+                                <span class="count">
+                                    第{{ students.number }}页，共{{ students.paginator.num_pages }}页
+                                </span>
+                                <span class="step-links">
+                                    {% if students.has_previous %}
+                                        <a href="?page={{ students.previous_page_number }}&limit=10&id={{ grade_id }}{{ filter }}">上一页</a>
+                                        <a href="?page={{ students.previous_page_number }}&limit=10&id={{ grade_id }}{{ filter }}"> {{ students.previous_page_number }} </a>
+                                    {% endif %}
+                                    <span class="current">
+                                    {{ students.number }}
+                                    </span>
+                                    {% if students.has_next %}
+                                        <a href="?page={{ students.next_page_number }}&limit=10&id={{ grade_id }}{{ filter }}"> {{ students.next_page_number }} </a>
+                                        <a href="?page={{ students.next_page_number }}&limit=10&id={{ grade_id }}{{ filter }}">下一页</a>
+                                    {% endif %}
+                                </span>
+                    </div>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+    </div>
+
+    <!--addmodal-->
+    <div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="addStudent">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>添加学生</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="addStudentForm">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"><span class="red">*</span>
+                                {{ form.studentname.label }}
+                            </label>
+
+                            <div class="col-sm-7">
+                                {{ form.studentname }}
+                            </div>
+                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="right"
+                               title="学生姓名不能为空"></i>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"><span class="red">*</span>
+                                {{ form.studentnum.label }}
+                            </label>
+
+                            <div class="col-sm-7">
+                                {{ form.studentnum }}
+                            </div>
+                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="right"
+                               title="学号不能为空"></i>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"><span class="red">*</span>
+                                {{ form.gender.label }}
+                            </label>
+
+                            <div class="col-sm-7 margin-top5">
+                                {{ form.gender }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"><span class="red">*</span>
+                                {{ form.idcard.label }}
+                            </label>
+
+                            <div class="col-sm-7">
+                                {{ form.idcard }}
+                            </div>
+                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="right"
+                               title="一卡通卡号不能为空"></i>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"><span class="red">*</span>
+                                {{ form.grade.label }}
+                            </label>
+
+                            <div class="col-sm-7">
+                                {{ form.grade }}
+                            </div>
+                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="right"
+                               title="班级不能为空"></i>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"><span class="red">*</span>
+                                {{ form.vm_num.label }}
+                            </label>
+
+                            <div class="col-sm-7">
+                                {{ form.vm_num }}
+                            </div>
+                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="只能是数字"></i>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" id="addStudentFormSave">保存</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--editmodal-->
+    <div class="modal fade" id="eidtStudentModal" tabindex="-1" role="dialog" aria-labelledby="editStudent">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>修改学生信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="editStudentForm">
+                        {% csrf_token %}
+                        {{ form_edit.student_id }}
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"><span class="red">*</span>
+                                {{ form_edit.studentname_edit.label }}
+                            </label>
+
+                            <div class="col-sm-7">
+                                {{ form_edit.studentname_edit }}
+                            </div>
+                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="right"
+                               title="学生姓名不能为空"></i>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"><span class="red">*</span>
+                                {{ form_edit.studentnum_edit.label }}
+                            </label>
+
+                            <div class="col-sm-7">
+                                {{ form_edit.studentnum_edit }}
+                            </div>
+                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="right"
+                               title="学号不能为空"></i>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"><span class="red">*</span>
+                                {{ form_edit.gender_edit.label }}
+                            </label>
+
+                            <div class="col-sm-7 margin-top5">
+                                {{ form_edit.gender_edit }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"><span class="red">*</span>
+                                {{ form_edit.idcard_edit.label }}
+                            </label>
+
+                            <div class="col-sm-7">
+                                {{ form_edit.idcard_edit }}
+                            </div>
+                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="right"
+                               title="一卡通卡号不能为空，仅支持字母、数字"></i>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"><span class="red">*</span>
+                                {{ form_edit.grade_edit.label }}
+                            </label>
+
+                            <div class="col-sm-7">
+                                {{ form_edit.grade_edit }}
+                            </div>
+                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="right"
+                               title="班级不能为空"></i>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                                {{ form_edit.vm_number.label }}
+                            </label>
+
+                            <div class="col-sm-7">
+                                {{ form_edit.vm_number }}
+                            </div>
+                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="只能是数字"></i>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" data_student_id="" class="btn btn-primary" id="editStudentFormSave">
+                                保存
+                            </button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--reset password-->
+    <div class="modal fade" id="resetPwdModal" tabindex="-1" role="dialog" aria-labelledby="resetPwd">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>修改密码</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="resetPwdForm">
+                        {% csrf_token %}
+                        {{ form_password.password_id }}
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"><span class="red">*</span>
+                                {{ form_password.new_password.label }}
+                            </label>
+
+                            <div class="col-sm-7">
+                                {{ form_password.new_password }}
+                                <!--input class="form-control" id="stu_new_pwd" name="stunewpwd" type="password" maxlength="20"-->
+                            </div>
+                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="right"
+                               title="新密码不能为空"></i>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"><span class="red">*</span>
+                                {{ form_password.re_password.label }}
+                            </label>
+
+                            <div class="col-sm-7">
+                                {{ form_password.re_password }}
+                                <!--input class="form-control" id="stu_re_pwd" name="sturepwd" type="password"-->
+                            </div>
+                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="right"
+                               title="确认密码必须和新密码一致"></i>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" id="resetPwdFormSave">保存</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--upload student-->
+    <div class="modal fade" id="uploadStuModal" tabindex="-1" role="dialog" aria-labelledby="uploadStu">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>导入学生</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="uploadStuForm">
+                        <div class="form-group ">
+                            <label class="col-sm-3 control-label">温馨提示：</label>
+
+                            <div class="col-sm-7 importcourse">
+                                <div>
+                                    <span>该功能用于一键导入学生</span>
+                                </div>
+                                <ul>
+                                    <li>步骤 1：<a href="{% static 'assets/example.csv' %}" class="downloadcsv">点击此处</a>下载csv模板到本地
+                                    </li>
+                                    <li>步骤 2：下载成功后，在csv模板中编辑学生信息</li>
+                                    <li>步骤 3：最后点击“选择文件”按钮，上传学生信息csv文件，点击“导入”按钮执行导入</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"><span class="red">*</span>
+                                学生导入csv
+                            </label>
+
+                            <div class="col-sm-4">
+                                <span class="btn darkgray" style="width: 90px;">
+                                    <i class="fa fa-upload"
+                                       style="display: inline-block;float:left;font-size:12px;margin-top:3px;"></i>
+                                    <input id="stu_csv" name="stucsv" type="file">
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="uploadStuFormSave">导 入</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Search-->
+    <div class="modal fade" id="searchStuModal" tabindex="-1" role="dialog" aria-labelledby="searchStu">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>搜索</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="searchStuForm">
+                        <div class="form-group ">
+                            <label class="col-sm-3 control-label">温馨提示：</label>
+
+                            <div class="col-sm-7 importcourse">
+                                <div>
+                                    <span>该功能用于搜索学生</span>
+                                </div>
+                                <ul>
+                                    <li class="red">请输入以下搜索类型的关键字，至少选择一项输入关键字进行搜索</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                                姓名
+                            </label>
+
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" id="search_name">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                                学号
+                            </label>
+
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" id="search_num">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                                卡号
+                            </label>
+
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" id="search_card_num">
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="searchStuFormSave">搜 索</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="grade_id" value={{ grade_id }}>
+    <input type="hidden" id="search_type_id" value="">
+{% endblock content %}
+
+{% block script %}
+    <script src="{% static 'assets/global/plugins/upload/jquery.uploadify.min.js' %}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("[data-toggle='tooltip']").tooltip();
+            common.initmenu("teacher", "studentlist");
+            $("#addStudentForm").find("input[name='gender']").first().attr("checked", true).parent().addClass("checked");
+
+            var class_id = {{ grade_id }};
+            var path = "";
+            var text = $(".select ul.option li a[flag='" + class_id + "']").text();
+            if (class_id != "0")
+                $(".currentgrade").find("span").text(text);
+
+            $(".resetpwd").each(function () {
+                $(this).bind("click", function () {
+                    $("#id_password_id").val($(this).attr("data_student_id"));
+                    var modal_div = $("#resetPwdModal");
+                    modal_div.modal("show");
+                });
+            })
+
+            function get_class(id) {
+                var opt = {
+                    "url": "{% url 'get_gradeclass' %}",
+                    "data": {},
+                    "async": true
+                };
+                common.ajaxgetrequest(opt, function (rsp) {
+                    if (rsp.code == 1) {
+                        var html = "<option value=''>请选择班级</option>";
+                        var gradelist = rsp.grade;
+                        for (var grade in gradelist) {
+                            html += "<option value=" + gradelist[grade].id + ">" + gradelist[grade].name + "</option>"
+                        }
+                        $(id).html(html);
+                        $("#id_grade").val(class_id);
+                    }
+                })
+            }
+
+            $(".editstudent").each(function () {
+                $(this).bind("click", function () {
+                    $("#id_student_id").val($(this).attr("data_student_id"));
+                    var modal_div = $("#eidtStudentModal");
+                    modal_div.modal("show");
+
+                    var id = $("#id_student_id").val();
+                    var opt = {
+                        "url": "{% url 'get_gradeclass' %}",
+                        "data": {},
+                        "async": true
+                    };
+                    common.ajaxgetrequest(opt, function (rsp) {
+                        if (rsp.code == 1) {
+                            var html = "<option value=''>请选择班级</option>";
+                            var gradelist = rsp.grade;
+                            for (var grade in gradelist) {
+                                html += "<option value=" + gradelist[grade].id + ">" + gradelist[grade].name + "</option>"
+                            }
+                            $("#id_grade_edit").html(html);
+
+                            var opt = {
+                                "url": "{% url 'ajax_get_student' %}",
+                                "data": {"id": id},
+                                "async": true
+                            };
+                            common.ajaxpostrequest(opt, function (rsp) {
+                                if (rsp.code == 1) {
+                                    var data = rsp.message;
+                                    $("#id_studentname_edit").val(data.name);
+                                    $("#id_studentnum_edit").val(data.num);
+                                    $("#editStudentForm input").each(function () {
+                                        if ($(this).val() == data.gender) {
+                                            $(this).attr("checked", true).parent().addClass("checked");
+                                        } else {
+                                            $(this).attr("checked", false).parent().removeClass("checked");
+                                        }
+                                    });
+                                    $("#id_grade_edit").val(data.grade_id);
+                                    $("#id_idcard_edit").val(data.idcard);
+                                    $("#id_vm_number").val(data.vm_num);
+                                }
+                            })
+                        }
+                    })
+                })
+            })
+
+            $("#resetPwdForm").bootstrapValidator({
+                feedbackIcons: {
+                    valid: 'fa fa-check',
+                    invalid: 'fa fa-remove',
+                    validating: 'fa fa-refresh'
+                },
+                fields: {
+                    new_password: {
+                        validators: {
+                            notEmpty: {
+                                message: "新密码不能为空"
+                            },
+                            stringLength: {
+                                min: 5,
+                                message: "密码长度至少5个字符"
+                            }
+                        }
+                    },
+                    re_password: {
+                        validators: {
+                            notEmpty: {
+                                message: "确认密码不能为空"
+                            },
+                            identical: {
+                                field: "new_password",
+                                message: "两次密码输入必须相同"
+                            }
+                        }
+                    }
+                }
+            }).on("success.form.bv", function (e) {
+                e.preventDefault();
+                var $form = $(e.target);
+
+                var opt = {
+                    "url": "{% url 'ajax_update_password' %}",
+                    "data": $form.serialize(),
+                    "async": true
+                };
+                common.ajaxpostrequest(opt, function (rsp) {
+                    if (rsp.code == 1) {
+                        $.MsgBox.Alert("提示", "修改密码成功");
+                        $("#resetPwdModal").modal("hide");
+                    }
+                })
+            })
+
+            $(".btnplus").on("click", function () {
+                //var value = $(".class_name option:selected").val();
+                get_class("#id_grade");
+            })
+
+            $("#addStudentForm").bootstrapValidator({
+                feedbackIcons: {
+                    valid: 'fa fa-check',
+                    invalid: 'fa fa-remove',
+                    validating: 'fa fa-refresh'
+                },
+                fields: {
+                    studentname: {
+                        validators: {
+                            notEmpty: {
+                                message: "学生姓名不能为空"
+                            },
+                            stringLength: {
+                                max: 10,
+                                message: "学生姓名长度不能超过10个字符"
+                            }
+                        }
+                    },
+                    studentnum: {
+                        validators: {
+                            notEmpty: {
+                                message: "学号不能为空"
+                            },
+                            stringLength: {
+                                max: 10,
+                                message: "学号长度不能超过10个字符"
+                            },
+                            regexp: {
+                                regexp: /^[0-9]+$/i,
+                                message: '只能使用数字'
+                            }
+                        }
+                    },
+                    idcard: {
+                        validators: {
+                            notEmpty: {
+                                message: "一卡通卡号不能为空"
+                            },
+                            stringLength: {
+                                max: 20,
+                                message: "一卡通卡号长度不能超过20个字符"
+                            },
+                            regexp: {
+                                regexp: /^[0-9]+$/i,
+                                message: '只能使用数字'
+                            }
+                        }
+                    },
+                    grade: {
+                        validators: {
+                            notEmpty: {
+                                message: "班级不能为空"
+                            }
+                        }
+                    },
+                    vm_num: {
+                        validators: {
+                            stringLength: {
+                                max: 3,
+                                message: "学生机编号长度不能超过3个字符"
+                            },
+                            regexp: {
+                                regexp: /^[0-9]+$/i,
+                                message: '只能使用数字'
+                            }
+                        }
+                    }
+                }
+            }).on("success.form.bv", function (e) {
+                e.preventDefault();
+                var $form = $(e.target);
+                var grade = $("#id_grade option:selected").val();
+                if (grade == "0") {
+                    $.MsgBox.Alert("提示", "请选择学生所在的班级!");
+                    return;
+                }
+                var opt = {
+                    "url": "{% url 'ajax_add_student' %}",
+                    "data": $form.serialize(),
+                    "async": false
+                };
+                common.ajaxpostrequest(opt, function (rsp) {
+                    if (rsp.code == 1) {
+                        location.href = "{% url 'student_list' %}" + "?id=" + grade;
+                    } else {
+                        $.MsgBox.Alert("提示", rsp.message);
+                    }
+                })
+            })
+
+            $("#editStudentForm").bootstrapValidator({
+                feedbackIcons: {
+                    valid: 'fa fa-check',
+                    invalid: 'fa fa-remove',
+                    validating: 'fa fa-refresh'
+                },
+                fields: {
+                    studentname_edit: {
+                        validators: {
+                            notEmpty: {
+                                message: "学生姓名不能为空"
+                            },
+                            stringLength: {
+                                max: 10,
+                                message: "学生姓名长度不能超过10个字符"
+                            }
+                        }
+                    },
+                    studentnum_edit: {
+                        validators: {
+                            notEmpty: {
+                                message: "学号不能为空"
+                            },
+                            stringLength: {
+                                max: 10,
+                                message: "学号长度不能超过10个字符"
+                            },
+                            regexp: {
+                                regexp: /^[0-9]+$/i,
+                                message: '只能使用数字'
+                            }
+                        }
+                    },
+                    grade_edit: {
+                        validators: {
+                            notEmpty: {
+                                message: "班级不能为空"
+                            }
+                        }
+                    },
+                    idcard_edit: {
+                        validators: {
+                            notEmpty: {
+                                message: "一卡通卡号不能为空"
+                            },
+                            stringLength: {
+                                max: 20,
+                                message: "一卡通卡号长度不能超过20个字符"
+                            },
+                            regexp: {
+                                regexp: /^[0-9]+$/i,
+                                message: '只能使用数字'
+                            }
+                        }
+                    },
+                    vm_number: {
+                        validators: {
+                             notEmpty: {
+                                message: "学生机编号不能为空"
+                            },
+                            stringLength: {
+                                max: 3,
+                                message: "学生机编号长度不能超过3个字符"
+                            },
+                            regexp: {
+                                regexp: /^[0-9]+$/i,
+                                message: '只能使用数字'
+                            }
+                        }
+                    }
+                }
+            }).on("success.form.bv", function (e) {
+                e.preventDefault();
+                var $form = $(e.target);
+                var grade = $("#id_grade_edit option:selected").val();
+                var opt = {
+                    "url": "{% url 'ajax_update_student' %}",
+                    "data": $form.serialize(),
+                    "async": true
+                };
+                common.ajaxpostrequest(opt, function(rsp){
+                    if(rsp.code == 1){
+                        location.reload();
+                    } else {
+                        $.MsgBox.Alert("提示", rsp.message);
+                    }
+                })
+            })
+
+            $(".btn_delete").on("click", function () {
+                var id = $(this).attr("data_student_id");
+                $.MsgBox.Confirm("提示", "确定要删除该学生吗?", function () {
+                    var opt = {
+                        "url": "{% url 'ajax_delete_student' %}",
+                        "data": {"id": id},
+                        "async": true
+                    };
+                    common.ajaxpostrequest(opt, function (rsp) {
+                        if (rsp.code == 1) {
+                            location.reload();
+                        }
+                    })
+                })
+            });
+
+            /*导入之前判断是否选择班级*/
+            $(".btnupload").on("click", function (e) {
+                if ($("#grade_id").val() == "") {
+                    $.MsgBox.Alert("提示", "导入学生之前，请在班级下拉菜单中选择要导入的班级");
+                }
+                else {
+                    var modal_div = $("#uploadStuModal");
+                    modal_div.modal("show");
+                }
+            });
+
+            $("#stu_csv").uploadify({
+                "auto": true,
+                "buttonText": "上传",
+                "swf": '/static/assets/global/plugins/upload/uploadify.swf',
+                "uploader": "{% url 'ajax_upload_csv' %}",
+                "fileDesc": "*.csv",
+                "fileTypeExts": "*.csv",
+                "width": "90px",
+                "height": "30px",
+                "onSelectError": function (file, errorCode, errorMsg, errorString) {
+                    //console.log(errorMsg, errorCode);
+                    if (errorCode == "-130") {
+                        //alert("文件格式不正确")
+                        $.MsgBox.Alert("提示", "文件格式不正确");
+                    }
+                    else {
+                        //alert("未知错误");
+                        $.MsgBox.Alert("提示", "未知错误");
+                    }
+                },
+                "onUploadSuccess": function (file, data) {
+
+                    var json = $.parseJSON(data);
+                    if (json.code == 1) {
+                        path = json.message;
+                        $.MsgBox.Alert("提示", "上传csv文件成功");
+                    }
+                    else {
+                        $.MsgBox.Alert("提示", json.message);
+                    }
+                }
+            });
+
+            $("#uploadStuFormSave").on("click", function () {
+                var id = $("#grade_id").val();
+
+                var opt = {
+                    "url": "{% url 'import_student_list' %}",
+                    "data": {"id": id, "path": path},
+                    "async": true
+                };
+                common.ajaxpostrequest(opt, function (rsp) {
+                    if (rsp.code == 1) {
+                        location.reload();
+                    }else if(rsp.code == -1){
+                        $.MsgBox.Alert("提示", rsp.message);
+                    }else{
+                        $.MsgBox.Confirm("提示", "导入成功" + (rsp.totals - rsp.failed) + "条, " + "导入失败" + rsp.failed +
+                        "条, " + "总数" + rsp.totals + " 条", function(){
+                            location.reload();
+                        });
+                    }
+                })
+            })
+
+            $(".btnrefresh").on("click", function () {
+                notie.alert(1, "刷新学生列表成功!", 2);
+                common.reload_page();
+            })
+
+            $(".group-checkable").on("click", function () {
+                common.checkallparent("checkboxes", $(this));
+            })
+
+            $(".btndel").on("click", function () {
+                var checked_student = [];
+                $(".checkboxes").each(function () {
+                    if (($(this).parent().hasClass("checked"))) {
+                        checked_student.push($(this).attr("data_student_id"));
+                    }
+                })
+                var len = checked_student.length;
+                if (!len) {
+                    $.MsgBox.Alert("提示", "至少选择一项!");
+                    return
+                } else {
+                    $.MsgBox.Confirm("提示", "确定要删除选中的学生吗?", function () {
+                        var opt = {
+                            "url": "{% url 'ajax_delete_student' %}",
+                            "data": {"id": JSON.stringify(checked_student)},
+                            "async": true
+                        };
+                        common.ajaxpostrequest(opt, function (rsp) {
+                            if (rsp.code == 1) {
+                                location.reload();
+                            }
+                        })
+                    })
+                }
+            })
+
+            $("#searchStuFormSave").on("click", function () {
+                var name = $("#search_name").val();
+                var num = $("#search_num").val();
+                var card = $("#search_card_num").val();
+                var url = "{% url 'student_list' %}" + "?id=" + class_id;
+                if(!name&&!num&&!card){
+                    $.MsgBox.Alert("请至少选择一项输入关键字进行搜索");
+                }
+                if(name){
+                    url += "&name=" + name;
+                }
+                if(num){
+                    url += "&num=" + num;
+                }
+                if(card){
+                    url += "&card=" + card;
+                }
+                location.href = url;
+            })
+
+            $("[data-dismiss='modal']").on("click", function(){
+                $(this).parent().parent().data('bootstrapValidator').resetForm(true);
+            })
+
+            /*下拉列表*/
+            $(".currentgrade").on("click", function (e) {
+                e.stopPropagation();
+                $(".select ul.option").toggle();
+                $(".searchStu .searchType ul").hide();
+            });
+
+            $(".select ul.option li a").on("click", function () {
+                var grade_id = $(this).attr("flag");
+                var value = $(this).text();
+
+                $("#grade_id").val(grade_id);
+                $(".currentgrade").find("span").text(value);
+
+                $(".select ul.option").toggle();
+            });
+
+            $(document).bind("click", function (e) {
+                var target = $(e.target);
+                if (target.closest(".option").length == 0) {
+                    $(".select ul.option").hide();
+                }
+                if (target.closest(".typeOption").length == 0) {
+                    $(".searchStu .searchType ul").hide();
+                }
+            });
+
+        });
+    </script>
+
+{% endblock script %}

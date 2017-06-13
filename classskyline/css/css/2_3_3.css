@@ -1,0 +1,27 @@
+h1{font-size: 16px}
+        dl,dt,dd{
+            padding: 0;
+            margin: 0;
+        }
+        dl{
+            width: 650px;
+            height: 432px;
+            background: url(../images/bg5.jpg) no-repeat right bottom;
+            padding: 50px 0 50px 150px;
+        }
+        dt{
+            position: relative;
+            left: 20px;
+            top: 180px;
+            font-weight: bold;
+        }
+        dd{float: left}
+        img{
+            width: 50px;
+        }
+        dt:nth-last-child(3n+2){
+            color: red;
+            font-size: 2em;
+            left: 10px;
+            top: 190px;
+        }

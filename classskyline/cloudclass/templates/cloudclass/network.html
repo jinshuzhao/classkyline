@@ -1,0 +1,262 @@
+{% extends "sitebase.html" %}
+{% load static from staticfiles %}
+
+{% block ext_style %}
+    <style type="text/css">
+        label > span {
+            color: red;
+        }
+
+        .bv-form .help-block {
+            margin-top: 0;
+            padding-bottom: 0;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <!-- BEGIN PAGE HEADER-->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{% url 'dash_board' %}">主页</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="#">网络</a>
+            </li>
+        </ul>
+    </div>
+    <!-- END PAGE HEADER-->
+
+    <!--虚拟机器列表-->
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet box darkgray">
+                <div class="portlet-title">
+                    <div class="caption">网络</div>
+
+                    <div class="actions" style="display: block;">
+                        DHCP服务状态:
+                        {% if dhcp_is_running %}
+                            <span style="color: green"><i class="fa fa-refresh fa-spin"></i>&nbsp;&nbsp;运行中</span>
+                            <a href="#" class="btn-sm stopdhcp">
+                                <i class="fa fa-stop"></i>&nbsp;停止服务
+                            </a>
+                        {% else %}
+                            <span style="color: red"><i class="fa fa-minus-circle"></i>&nbsp;&nbsp;已停止</span>
+                            <a href="#" class="btnbatchadd startdhcp">
+                                <i class="fa fa-power-off"></i>&nbsp;启动服务
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form class="portlet-body form" id="id_network_form" style="padding: 0px;" method="post">
+                                <!-- BEGIN FORM-->
+                                <div class="form-horizontal">
+                                    <div class="form-body">
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label" for="ip-address-begin"><span>*</span>起始地址</label>
+
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="ip-address-begin" name="ip_address_begin"
+                                                       maxlength="15" value="{{ network.address_begin }}"
+                                                       style="height: 32px;"/>
+                                                <span class="help-inline"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label" for="ip-address-end"><span>*</span>结束地址</label>
+
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="ip-address-end" name="ip_address_end" maxlength="15"
+                                                       value="{{ network.address_end }}"
+                                                       style="height: 32px;"/>
+                                                <span class="help-inline"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label" for="netmask"><span>*</span>子网掩码</label>
+
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="netmask" name="netmask" maxlength="15"
+                                                       value="{{ network.netmask }}"
+                                                       style="height: 32px;"/>
+                                                <span class="help-inline"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label" for="gateway-address"><span>*</span>网关地址</label>
+
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="gateway-address" name="gateway" maxlength="50"
+                                                       value="{{ network.gateway|default_if_none:'' }}"
+                                                       style="height: 32px;"/>
+                                                <span class="help-inline"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label" for="dns-address">DNS 地址</label>
+
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="dns-address" name="dns" maxlength="15"
+                                                       value="{{ network.dns|default_if_none:'' }}"
+                                                       style="height: 32px;"/>
+                                                <span class="help-inline"></span>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="alert alert-danger" style="display: none;">
+                                            <label id="errorMessage"></label>
+                                        </div>
+
+                                        <div class="">
+                                            <div class="row">
+                                                <div class="col-sm-offset-3 col-sm-9">
+                                                    <button class="btn blue" id="id_save" style="padding: 8px 18px;">保 存</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- END FORM-->
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            common.initmenu("network", "");
+
+            $(".startdhcp").bind("click", function () {
+
+                $.MsgBox.Confirm("提示", "确定要启动吗？", function() {
+                    var opt = {url: "{% url 'ajax_start_dhcp_service' %}", data: null, async: false};
+                    common.ajaxpostrequest(opt, function (rsp) {
+                        notie.alert(1, "启动成功", 2);
+                        common.reload_page();
+                    });
+                });
+            });
+
+            $(".stopdhcp").bind("click", function () {
+                $.MsgBox.Confirm("提示", "确定要停用吗?", function() {
+                    var opt = {url: "{% url 'ajax_stop_dhcp_service' %}", data: null, async: false};
+                    common.ajaxpostrequest(opt, function (rsp) {
+                        notie.alert(1, "停用成功", 2);
+                        common.reload_page();
+                    });
+                })
+            });
+
+            $("[data-toggle='tooltip']").tooltip();
+
+            /*validate*/
+            $("#id_network_form").bootstrapValidator({
+                message: '字段不合法',
+                feedbackIcons: {
+                    valid: 'fa fa-check',
+                    invalid: 'fa fa-remove',
+                    validating: 'fa fa-refresh'
+                },
+                fields: {
+                    ip_address_begin:{
+                        validators:{
+                            notEmpty:{
+                                message:"开始地址不能为空"
+                            },
+                            ip:{
+                                message:"请输入合法的虚拟机IP地址池的起始地址"
+                            }
+                        }
+                    },
+                    ip_address_end:{
+                        validators:{
+                            notEmpty:{
+                                message:"结束地址不能为空"
+                            },
+                            ip:{
+                                message:"请输入合法的虚拟机IP地址池的结束地址"
+                            }
+                        }
+                    },
+                    netmask:{
+                        validators:{
+                            notEmpty:{
+                                message:"子网掩码不能为空"
+                            },
+                            ip:{
+                                message:"请输入合法的虚拟机子网的掩码"
+                            }
+                        }
+                    },
+                    dns:{
+                        validators:{
+                            ip:{
+                                message:"请输入合法的网络的域名系统"
+                            }
+                        }
+                    },
+                    gateway:{
+                        validators:{
+                            notEmpty:{
+                                message:"网关不能为空"
+                            },
+                            ip:{
+                                message:"请输入合法的子网的网关IP地址"
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv',function(e){
+                // Prevent form submission
+                e.preventDefault();
+                // Get the form instance
+                var $form = $(e.target);
+                // Get the BootstrapValidator instance
+                var bv = $form.data('bootstrapValidator');
+                loading();
+                // ajax 提交
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'ajax_add_network' %}",
+                    data: $form.serialize(),
+                    success: function (res) {
+                        if (res['result'] == 'ok') {
+                            notie.alert(1,"网络修改成功",2);
+                            common.reload_page();
+                        } else {
+                            notie.alert(3,res['message'],3);
+                        }
+                        spinner.stop();
+                    },
+                    error: function (){
+                        notie.alert(3,"服务器错误，请稍候重试",3);
+                        spinner.stop();
+                    }
+                });
+                $(".bg").fadeOut(2000);
+            });
+        })
+
+    </script>
+{% endblock script %}

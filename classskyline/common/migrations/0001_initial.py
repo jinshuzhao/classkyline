@@ -1,0 +1,207 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django.db import models, migrations
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+    ]
+
+    operations = [
+        migrations.CreateModel(
+            name='Course',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('created_by', models.CharField(max_length=50, blank=True)),
+                ('updated_at', models.DateTimeField(auto_now=True)),
+                ('updated_by', models.CharField(max_length=50, blank=True)),
+                ('deleted_at', models.DateTimeField(null=True, blank=True)),
+                ('deleted_by', models.CharField(max_length=50, blank=True)),
+                ('deleted', models.BooleanField(default=False, db_index=True)),
+                ('name', models.CharField(max_length=64)),
+                ('desc', models.CharField(max_length=1024)),
+                ('uuid', models.CharField(max_length=36, db_index=True)),
+                ('os_type', models.PositiveSmallIntegerField(choices=[(0, b'WINDOWS'), (1, b'LINUX')])),
+                ('os_version', models.PositiveSmallIntegerField(choices=[(0, b'Microsoft Windows 2000'), (1, b'Microsoft Windows XP Professional(32-bit)'), (2, b'Microsoft Windows XP Professional(64-bit)'), (3, b'Microsoft Windows Vista(32-bit)'), (4, b'Microsoft Windows Vista(64-bit)'), (5, b'Microsoft Windows 7(32-bit)'), (6, b'Microsoft Windows 7(64-bit)'), (7, b'Microsoft Windows 8(32-bit)'), (8, b'Microsoft Windows 8(64-bit)'), (9, b'Microsoft Windows Server 2003(32-bit)'), (10, b'Microsoft Windows Server 2003(64-bit)'), (11, b'Microsoft Windows Server 2008(32-bit)'), (12, b'Microsoft Windows Server 2008(64-bit)'), (13, b'Microsoft Windows Server 2008 R2(64-bit)'), (14, b'Microsoft Windows Server 2012'), (15, b'Microsoft Windows Server 2012 R2'), (1001, b'Red Hat Enterprise Linux4(32-bit)'), (1002, b'Red Hat Enterprise Linux4(64-bit)'), (1003, b'Red Hat Enterprise Linux5(32-bit)'), (1004, b'Red Hat Enterprise Linux5(64-bit)'), (1005, b'Red Hat Enterprise Linux6(32-bit)'), (1006, b'Red Hat Enterprise Linux6(64-bit)'), (1050, b'Novell SUSE Linux Enterprise 8/9(32-bit)'), (1051, b'Novell SUSE Linux Enterprise 8/9(64-bit)'), (1052, b'Novell SUSE Linux Enterprise 10(32-bit)'), (1053, b'Novell SUSE Linux Enterprise 10(64-bit)'), (1054, b'Novell SUSE Linux Enterprise 11(32-bit)'), (1055, b'Novell SUSE Linux Enterprise 11(64-bit)'), (1100, b'CentOS 4/5/6(32bit)'), (1101, b'CentOS 4/5/6(64bit)'), (1150, b'Oracle Linux 4/5/6(32-bit)'), (1151, b'Oracle Linux 4/5/6(64-bit)'), (1200, b'Debian GUN/Linux 4(32-bit)'), (1201, b'Debian GUN/Linux 4(64-bit)'), (1202, b'Debian GUN/Linux 5(32-bit)'), (1203, b'Debian GUN/Linux 5(64-bit)'), (1204, b'Debian GUN/Linux 6(32-bit)'), (1205, b'Debian GUN/Linux 6(64-bit)'), (1250, b'Ubuntu Linux(32-bit)'), (1251, b'Ubuntu Linux(64-bit)'), (1500, b'Other Linux(32-bit)'), (1501, b'Other Linux(64-bit)')])),
+                ('visibility', models.PositiveSmallIntegerField(db_index=True, choices=[(0, '\u7ba1\u7406\u5458\u53ef\u89c1'), (1, '\u7ba1\u7406\u5458\u548c\u6559\u5e08\u53ef\u89c1'), (2, '\u7ba1\u7406\u5458\u3001\u6559\u5e08\u3001\u5b66\u751f\u53ef\u89c1')])),
+                ('state', models.PositiveSmallIntegerField(db_index=True, choices=[(0, '\u521d\u59cb\u72b6\u6001'), (1, '\u51c6\u5907\u4e0a\u8bfe'), (2, '\u6b63\u5728\u4e0a\u8bfe'), (3, '\u51c6\u5907\u4e0b\u8bfe')])),
+                ('priority', models.PositiveIntegerField()),
+                ('counter', models.PositiveIntegerField(default=0)),
+                ('is_volume', models.BooleanField(default=False)),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='CourseProfile',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('created_by', models.CharField(max_length=50, blank=True)),
+                ('updated_at', models.DateTimeField(auto_now=True)),
+                ('updated_by', models.CharField(max_length=50, blank=True)),
+                ('deleted_at', models.DateTimeField(null=True, blank=True)),
+                ('deleted_by', models.CharField(max_length=50, blank=True)),
+                ('deleted', models.BooleanField(default=False, db_index=True)),
+                ('name', models.CharField(max_length=50)),
+                ('cpu', models.PositiveSmallIntegerField()),
+                ('memory', models.PositiveSmallIntegerField()),
+                ('disk', models.PositiveSmallIntegerField()),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Desktop',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('created_by', models.CharField(max_length=50, blank=True)),
+                ('updated_at', models.DateTimeField(auto_now=True)),
+                ('updated_by', models.CharField(max_length=50, blank=True)),
+                ('deleted_at', models.DateTimeField(null=True, blank=True)),
+                ('deleted_by', models.CharField(max_length=50, blank=True)),
+                ('deleted', models.BooleanField(default=False, db_index=True)),
+                ('name', models.CharField(max_length=64, db_index=True)),
+                ('uuid', models.CharField(max_length=36)),
+                ('mac_address', models.CharField(max_length=17)),
+                ('ip_address', models.IPAddressField()),
+                ('protocol', models.PositiveSmallIntegerField(choices=[(0, b'rdp'), (1, b'spice'), (2, b'vnc'), (3, b'ssh')])),
+                ('port', models.SmallIntegerField()),
+                ('username', models.CharField(max_length=64)),
+                ('password', models.CharField(max_length=64)),
+                ('is_snapshot', models.BooleanField(default=False)),
+                ('state', models.CharField(max_length=36)),
+                ('course', models.ForeignKey(to='common.Course')),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Host',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('created_by', models.CharField(max_length=50, blank=True)),
+                ('updated_at', models.DateTimeField(auto_now=True)),
+                ('updated_by', models.CharField(max_length=50, blank=True)),
+                ('deleted_at', models.DateTimeField(null=True, blank=True)),
+                ('deleted_by', models.CharField(max_length=50, blank=True)),
+                ('deleted', models.BooleanField(default=False, db_index=True)),
+                ('ip_address', models.IPAddressField()),
+                ('uuid', models.CharField(max_length=36)),
+                ('desc', models.CharField(max_length=1024)),
+                ('cpu', models.PositiveSmallIntegerField()),
+                ('memory', models.PositiveSmallIntegerField()),
+                ('disk', models.PositiveSmallIntegerField()),
+                ('virt_type', models.PositiveSmallIntegerField(choices=[(0, b'CAS'), (1, b'KVM'), (2, b'HYPER-V')])),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Network',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('created_by', models.CharField(max_length=50, blank=True)),
+                ('updated_at', models.DateTimeField(auto_now=True)),
+                ('updated_by', models.CharField(max_length=50, blank=True)),
+                ('deleted_at', models.DateTimeField(null=True, blank=True)),
+                ('deleted_by', models.CharField(max_length=50, blank=True)),
+                ('deleted', models.BooleanField(default=False, db_index=True)),
+                ('subnet', models.IPAddressField()),
+                ('ip_address_begin', models.IPAddressField()),
+                ('ip_address_end', models.IPAddressField()),
+                ('netmask', models.IPAddressField()),
+                ('gateway', models.IPAddressField()),
+                ('dns_master', models.IPAddressField(blank=True)),
+                ('enabled', models.BooleanField(default=False)),
+                ('activate_external', models.BooleanField(default=False)),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Settings',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('key', models.CharField(max_length=50)),
+                ('value', models.TextField()),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Terminal',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('created_by', models.CharField(max_length=50, blank=True)),
+                ('updated_at', models.DateTimeField(auto_now=True)),
+                ('updated_by', models.CharField(max_length=50, blank=True)),
+                ('deleted_at', models.DateTimeField(null=True, blank=True)),
+                ('deleted_by', models.CharField(max_length=50, blank=True)),
+                ('deleted', models.BooleanField(default=False, db_index=True)),
+                ('name', models.CharField(max_length=64)),
+                ('mac_address', models.CharField(max_length=17, db_index=True)),
+                ('ip_address', models.IPAddressField()),
+                ('version', models.CharField(max_length=20)),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='TerminalConnJournal',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('created_by', models.CharField(max_length=50, blank=True)),
+                ('updated_at', models.DateTimeField(auto_now=True)),
+                ('updated_by', models.CharField(max_length=50, blank=True)),
+                ('deleted_at', models.DateTimeField(null=True, blank=True)),
+                ('deleted_by', models.CharField(max_length=50, blank=True)),
+                ('deleted', models.BooleanField(default=False, db_index=True)),
+                ('desktop', models.ForeignKey(to='common.Desktop')),
+                ('terminal', models.ForeignKey(to='common.Terminal')),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='desktop',
+            name='host',
+            field=models.ForeignKey(to='common.Host'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='course',
+            name='host',
+            field=models.ForeignKey(to='common.Host'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='course',
+            name='profile',
+            field=models.ForeignKey(to='common.CourseProfile'),
+            preserve_default=True,
+        ),
+    ]

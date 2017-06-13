@@ -1,0 +1,144 @@
+{% extends "sitebase.html" %}
+{% load static from staticfiles %}
+
+{% block content %}
+    <!-- BEGIN PAGE HEADER-->
+
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{% url 'dash_board' %}">主页</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="#">系统设置</a>
+            </li>
+        </ul>
+        <div class="page-toolbar">
+
+        </div>
+    </div>
+    <!-- END PAGE HEADER-->
+
+    <div class="clearfix">
+    </div>
+    <!--虚拟机器列表-->
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+
+             <div class="portlet box darkgray">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <!--<i class="fa fa-desktop"></i>-->日志下载
+                    </div>
+                    <div class="tools">
+
+                    </div>
+                </div>
+                <div class="portlet-btn">
+                </div>
+                <div class="clearfix"></div>
+                 <div class="portlet-body">
+                     <div class="tab-content ">
+
+                         <div class="tab-pane active" id="portlet_tab1">
+                             <div class="actions"  style="text-align: right">
+{#                                 <a class="btn  " id="upload_1" style="text-align: right">#}
+{#                                     <i class="fa fa-download" ></i>下载#}
+{#                                 </a>#}
+
+                             </div>
+{#                             <table class="table table-striped table-bordered table-hover" id="sample_2">#}
+{#                                 <thead>#}
+{#                                 <tr>#}
+{#                                     <th>日志类型</th>#}
+{#                                     <th>#}
+{#                                         日志大小/KB#}
+{#                                     </th>#}
+{#                                     <th>#}
+{#                                         下载时间#}
+{#                                     </th>#}
+{##}
+{#                                     <th>#}
+{#                                         操作#}
+{#                                     </th>#}
+{#                                 </tr>#}
+{#                                 </thead>#}
+{#                                 <tbody class="isolist">#}
+{##}
+{##}
+{#                                 </tbody>#}
+{#                             </table>#}
+
+                             <p style="text-align: center;margin-top:20px;margin-bottom:40px;">
+                                 <a class="btn  " id="upload_1" style="color:#fff;font-size:16px;border: 1px solid #2374c6;background: #2374c6;margin-right:30%;padding:7px 20px;">
+                                     <i class="fa fa-download "  style="font-size: 1.2em;"></i>&nbsp;&nbsp;下载日志
+                                 </a>
+                             </p>
+                             <p style="color:#a0a0a0;font-size:14px;padding-left:10px;">说明：本功能用于下载云学堂管理平台以及CAS CVM所管理主机的日志文件。</p>
+                         </div>
+
+                     </div>
+                 </div>
+             </div>
+   <!--             <div class="portlet-body">
+                   <div class="row">
+                        <div class="col-md-12">
+                            <div class="portlet-body form" style="padding: 0px;">
+
+                                &lt;!&ndash; BEGIN FORM&ndash;&gt;
+
+                                <div class="form-horizontal">
+
+                                    <div class="form-body">
+
+
+
+                                         <div class="form-group">
+                                            <div class="col-sm-12">
+
+                                               <a href="#" class="syslog"><i class="fa fa-download"></i> </a>
+
+                                            </div>
+                                             <div class="col-sm-12 ">
+                                                 <label class="logstyle">系统日志下载</label>
+                                             </div>
+
+                                        </div>
+
+
+                                    </div>
+
+
+                                    &lt;!&ndash; END FORM&ndash;&gt;
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+{#                    <div class="row" style="text-align: center;margin-top: 50px;margin-bottom:50px;color:#fff;">#}
+{#                        <p style="font-size:.8em;font-weight: 800;">系统日志下载</p>#}
+{#                        <a href="#" class="syslog"><i class="fa fa-download" style="font-size:8em;margin-top: .5em"></i> </a>#}
+{#                    </div>#}
+                </div>
+            </div>-->
+        </div>
+    </div>
+{% endblock content %}
+{% block script %}
+    <link href="{% static 'assets/global/plugins/dialog/jquery_dialog.css' %}" rel="stylesheet"/>
+
+    <script src="{% static 'assets/global/plugins/dialog/jquery_dialog.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+              common.initmenu("log", "logs");
+            $("#upload_1").bind("click",function(){
+                location.href = "{% url 'get_logs' %}";
+            });
+        })
+    </script>
+
+{% endblock script %}

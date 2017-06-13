@@ -1,0 +1,26 @@
+/* CSS Document */
+*{margin:0; padding:0; font-family:"微软雅黑";}
+body{  margin:0 auto;/*background:url(../img/bg.jpg) no-repeat;*/}
+img{border:none;}
+
+/*a:hover{text-decoration:underline;}*/
+
+ul{list-style:none;}
+form,input{ border:none;}
+.left{float:left;}
+.right{float:right;}
+.clear{clear:both;}
+#main{}
+.border-wrapper{border: 1px solid #ccc;height:465px;}
+.zhu{width:787px; height:471px; background:#fff; }
+.ztou{ height:58px; background:#242b31; padding-top:32px;}
+.biao{ width:460px;height:278px; overflow:hidden;}
+ul li{ margin-left:20px;}
+a{text-decoration:none;}
+.l1 a{ background:url(../img/ann/1m.png) no-repeat;color:#fff;}
+
+.l1 a:hover{ background:url(../img/ann/1T.png)  no-repeat;}
+.l2 a{ background:url(../img/ann/BM.png)  no-repeat; color:#333;}
+.l2 a:hover{ background:url(../img/ann/BT.png)  no-repeat;}
+.l3 a{ background:url(../img/ann/QM.png) no-repeat; color:#333;}
+.l3 a:hover{ background:url(../img/ann/QT.png)  no-repeat;}

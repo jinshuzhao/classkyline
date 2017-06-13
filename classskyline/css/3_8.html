@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>38</title>
+    <meta charset="utf-8"/>
+    <style type="text/css">
+        body{
+            margin: 0;
+            padding: 0;
+            background: black;
+            color: #666;
+        }
+        #text-shadow-box{
+            position: relative;
+            width: 598px;
+            height: 406px;
+            background: #666;
+            overflow: hidden;
+            border: #333 1px solid;
+        }
+        #text-shadow-box div.wall{
+            position: absolute;
+            width: 100%;
+            height: 406px;
+            top: 175px;
+            left: 0;
+        }
+        #text{
+            text-align: center;
+            line-height: 0.5em;
+            margin: 0;
+            font-family: "Helvetica", "Arial", sans-serif;
+            height: 1px;
+            color: #999;
+            font-size: 80px;
+            font-weight: bold;
+            text-shadow: 5px -5px 16px #000;
+        }
+        div.wall div{
+            position: absolute;
+            width: 100%;
+            height: 300px;
+            top: 42px;
+            left: 0;
+            background: #999;
+        }
+        #spotlight{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: url(images/spotlight.png) center -300px;/*水平位置居中，垂直位置向上300px*/
+        }
+        #spotlight a{
+            color: #ccc;
+            position: absolute;
+            top: 56%;
+            left: 47%;
+            float: left;
+            text-decoration: none;
+        }
+        a img{
+            border: none;
+        }
+    </style>
+</head>
+<body>
+<div id="text-shadow-box">
+    <div class="wall">
+        <p id="text">黑猫警长</p>
+        <div></div>
+    </div>
+    <div id="spotlight"><a href="3_7.html"><img src="images/cat1.png"/></a></div>
+</div>
+</body>
+</html>

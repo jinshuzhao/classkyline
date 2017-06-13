@@ -1,0 +1,104 @@
+{% extends "sitebase.html" %}
+{% load static from staticfiles %}
+
+{% block ext_style %}
+<link href="{% static 'assets/global/plugins/jstree/dist/themes/default/style.min.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row margin-bottom-40">
+        <!-- BEGIN CONTENT -->
+        <div class="col-md-12">
+            <!-- BEGIN TAB PORTLET-->
+            <div class="portlet box darkgray">
+                <div class="portlet-title" style="padding:5px;">
+                    <div class="caption">
+                        升级包管理
+                    </div>
+                </div>
+
+                <div class="portlet-body">
+                    <div class="tab-content ">
+                        <div class="tab-pane active" id="portlet_tab1">
+                            <div class="row">
+                                <div class="actions pull-right">
+                                    <a class="btn upgraderefresh">
+                                        <i class="fa fa-refresh"></i>刷新
+                                    </a>
+                                    <a class="btn" id="upload_1">
+                                        <i class="fa fa-upload"></i>上传
+                                    </a>
+                                </div>
+                                <div>
+                                    <p style="color:#a0a0a0;font-size:14px;padding-left:10px;">
+                                        说明：本功能用于上传学生客户端的升级包。如需升级学生客户端程序，请先在此处上传升级包，然后登录教师管理端执行升级操作。</p>
+                                </div>
+                            </div>
+
+                            <!--目录tree列表-->
+                            <div class="row container" id="jstreelist">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- END TAB PORTLET-->
+        </div>
+    </div>
+    <!-- END CONTENT -->
+{% endblock content %}
+
+{% block script %}
+    <script src="{% static 'assets/global/plugins/upload/jquery.uploadify.min.js' %}"></script>
+    <script src="{% static 'assets/global/plugins/jstree/dist/jstree.min.js' %}"></script>
+
+    <script type="text/javascript">
+        function initisolist() {
+            var opt = {url: "{% url 'ajax_get_upgrades' %}", data: null, async: true};
+            common.ajaxpostrequest(opt, function (rsp) {
+                if (rsp != null) {
+                    var isolist = rsp["result"];
+                    var $tree = $('#jstreelist');
+                    //重新排序文件列表，文件夹在前，文件在后
+                    var isolist1 = [];
+                    var isolist2 = [];
+
+                    for (count=0; count<isolist.length; count++) {
+                        if (!('icon' in isolist[count])) {
+                            isolist1.push(isolist[count]);
+                        } else {
+                            isolist2.push(isolist[count]);
+                        }
+                    }
+                    isolist = isolist1.concat(isolist2);
+                    $tree.jstree("destroy");
+                    $tree.jstree({
+                        "core": {
+                            "data": isolist
+                        },
+                        "themes" : { "default" : true }
+                    });
+                }
+            })
+        }
+
+        initisolist();
+
+        $(".upgraderefresh").on("click", function () {
+            initisolist();
+            notie.alert(1, "刷新成功", 2);
+        });
+
+
+        $(document).ready(function () {
+            var upgradeftp = "{{ upgradeftp }}";
+            common.initmenu("log", "sysupgrade");
+
+            $("#upload_1").bind("click", function () {
+                location.href = upgradeftp;
+            });
+        });
+    </script>
+{% endblock script %}

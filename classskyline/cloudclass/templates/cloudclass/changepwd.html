@@ -1,0 +1,163 @@
+{% extends 'bootstrapcommon.html' %}
+{% load static from staticfiles %}
+
+{% block ext_css %}
+    <style type="text/css">
+        body {
+            background-color: #fff !important;
+            background-image: none;
+        }
+        .red{color:red;padding-right: 5px;}
+
+        .form-control {
+            border: 1px solid #ccc;
+        }
+        input[type=password] {
+            width: 65%;
+        }
+        .bv-form .help-block {
+            margin-top: 0;
+            padding-bottom: 0;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <form class="portlet-body form" id="id_pwd_form" style="padding: 0px;">
+
+                <div class="form-horizontal">
+                    <div class="form-body">
+
+                        <input type="hidden" value="{{ csrf_token }}" name="csrfmiddlewaretoken">
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"><span class="red">*</span>当前密码</label>
+                            <div class="col-sm-6">
+                                <input type="password" class="form-control" id="id_current_password" name="current_password"
+                                       maxlength="50" value="" style="height: 32px;" data-toggle="tooltip"
+                                       data-placement="right" title="密码为5～40个字符的字符串，区分大小写，仅支持字母、数字以及 !@#$%^&* 等字符。"/>
+                                <span class="help-inline"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"><span class="red">*</span>新的密码</label>
+                            <div class="col-sm-6">
+                                <input type="password" class="form-control" id="id_new_password" name="new_password"
+                                       maxlength="50" value="" style="height: 32px;" data-toggle="tooltip"
+                                       data-placement="right" title="密码为5～40个字符的字符串，区分大小写，仅支持字母、数字以及 !@#$%^&* 等字符。"/>
+                                <span class="help-inline"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"><span class="red">*</span>确认密码</label>
+                            <div class="col-sm-6">
+                                <input type="password" class="form-control" id="id_re_password" name="re_password"
+                                       maxlength="50" value="" style="height: 32px;" data-toggle="tooltip"
+                                       data-placement="right" title="确认密码必须和新的密码一致"/>
+                                <span class="help-inline"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-actions" style="padding:0;background-color:#fff;border-top:none;">
+                            <div class="row">
+                                <div class="col-sm-offset-3 col-sm-9">
+                                    <button class="btn btn-primary" type="submit">保存</button>
+                                    <button class="btn" onclick="btncancel()" type="button">取消</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <input type="hidden" id="hidid" value='{{ user.id }}'/>
+{% endblock content %}
+
+{% block script %}
+<script type="text/javascript">
+    $("[data-toggle='tooltip']").tooltip();
+
+    function logout() {
+        window.parent.parent.location.href="{% url 'logout' %}";
+    }
+
+    function btnok() {
+        var opt = {
+            url: "{% url 'ajax_change_pwd' %}",
+            data:  $("#id_pwd_form").serialize(),
+            async: true
+        };
+
+        common.ajaxpostrequest(opt, function (rsp) {
+            if (rsp["result"] == "ok") {
+                window.parent.notie.alert(1, "密码修改成功", 2);
+                setTimeout(logout, 1000);
+            }
+            else {
+                window.parent.notie.alert(3, rsp["message"], 3);
+            }
+
+        })
+    }
+    function btncancel() {
+        window.parent.parent.document.getElementById("jd_dialog").style.display = "none";
+        window.parent.parent.document.getElementById("jd_shadow").remove();
+    }
+
+    $("#id_pwd_form").bootstrapValidator({
+        message: "字段不合法",
+        feedbackIcons: {
+            valid: 'fa fa-check',
+            invalid: 'fa fa-remove',
+            validating: 'fa fa-refresh'
+        },
+        fields: {
+            current_password: {
+                validators: {
+                    notEmpty: {
+                        message: "当前密码不能为空"
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9!@#$%^&*]{5,40}$/,
+                        message: "请输入合法的当前密码"
+                    }
+                }
+            },
+            new_password: {
+                validators: {
+                    notEmpty: {
+                        message: "新的密码不能为空"
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9!@#$%^&*]{5,40}$/,
+                        message: "请输入合法的新的密码"
+                    },
+                    identical: {
+                        field: "re_password",
+                        message: "新的密码和确认密码不匹配"
+                    }
+                }
+            },
+            re_password: {
+                validators: {
+                    identical: {
+                        field: "new_password",
+                        message: "确认密码和新的密码不匹配"
+                    }
+                }
+            }
+        }
+    }).on("success.form.bv", function(e) {
+        e.preventDefault();
+        btnok();
+    });
+</script>
+
+{% endblock script %}

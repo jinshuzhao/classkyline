@@ -1,0 +1,396 @@
+{% extends "sitebase.html" %}
+{% load static from staticfiles %}
+
+{% block ext_style %}
+    <style type="text/css">
+        label > span {
+            color: red;
+        }
+
+        .bv-form .help-block{margin-top:0;padding-bottom: 0;}
+    </style>
+{% endblock %}
+
+{% block content %}
+    <!-- BEGIN PAGE HEADER-->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{% url 'dash_board' %}">主页</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="#">系统设置</a>
+            </li>
+        </ul>
+    </div>
+    <!-- END PAGE HEADER-->
+
+    <!--虚拟机器列表-->
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet box darkgray">
+                <div class="portlet-title">
+                    <div class="caption">
+                        系统设置
+                    </div>
+                </div>
+                <div class="portlet-btn"></div>
+
+                <div class="portlet-body">
+                   <div class="row">
+                        <div class="col-md-12">
+                            <form class="portlet-body form" id="id_settings_form" style="padding: 0" method="post">
+                                <!-- BEGIN FORM-->
+                                <div class="form-horizontal">
+                                    <div class="form-body">
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label" for="id_desktop_count"><span>*</span>虚拟机数量</label>
+
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="id_desktop_count" maxlength="50" name="desktop_count"
+                                                       value="{{ desktop_count.default }}"/>
+                                                <span class="help-inline">数量不能超过默认的最大值{{ max_desktop_count }}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label" for="id_cas_address"><span>*</span> CAS CVM地址</label>
+
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="id_cas_address" maxlength="50" name="cas_address"
+                                                       value="{{ cas_address.default }}"/>
+                                                <span class="help-inline"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label" for="id_cas_username"><span>*</span> 用户名</label>
+
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="id_cas_username" maxlength="50" name="cas_username"
+                                                       value="{{ cas_username.default }}"/>
+                                                <span class="help-inline"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label" for="id_cas_password"><span>*</span> 密码</label>
+
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="id_cas_password" maxlength="50" name="cas_password"
+                                                       value="{{ cas_password.default }}"/>
+                                                <span class="help-inline"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group sys">
+                                            <label class="col-sm-3 control-label" for="id_vswitch"><span>*</span> vSwitch虚拟交换机</label>
+
+                                            <div class="col-sm-6 vswitch_block">
+                                                <select name="vswitch" id="id_vswitch" class="form-control">
+                                                    <option value="">----</option>
+                                                    {% for v in vswitch.choices %}
+                                                        <option value="{{ v.id }}" {% if v.name == vswitch.default %}selected{% endif %}>{{ v.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <span class="help-inline"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group sys">
+                                            <label class="col-sm-3 control-label" for="id_npp"><span>*</span> 网络策略模板</label>
+
+                                            <div class="col-sm-6 npp_block">
+                                                <select name="npp" id="id_npp" class="form-control">
+                                                    {% for n in npp.choices %}
+                                                        <option value="{{ n.id }}" {% if n.name == npp.default %}selected{% endif %}>{{ n.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <span class="help-inline"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group sys">
+                                            <label class="col-sm-3 control-label" for="id_acl">ACL名称</label>
+
+                                            <div class="col-sm-6 acl_block">
+                                                <select name="acl" id="id_acl" class="form-control">
+                                                    <option value="">----</option>
+                                                    {% for a in acl.choices %}
+                                                        <option value="{{ a.id }}" {% if a.name == acl.default %}selected{% endif %}>{{ a.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <span class="help-inline">若为空将不能使用禁网功能,建议添加ACL</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group sys">
+                                            <label class="col-sm-3 control-label" for="id_white_list"><span>*</span> ACL策略白名单</label>
+
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="id_white_list" maxlength="50" name="white_list"
+                                                       value="{{ white_list.default }}"/>
+                                                <span class="help-inline">若有多个使用逗号','分隔</span>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="alert alert-danger" style="display: none;">
+                                            <label id="errorMessage"></label>
+                                        </div>
+                                        <div class="margin-bottom-20">
+                                            <div class="row">
+                                                <div class="col-sm-offset-3 col-sm-9">
+                                                    <button class="btn blue" id="id_save" style="padding: 8px 18px;">保 存</button>
+                                                    <button class="btn blue" id="id_reload_cas" style="padding: 8px 18px;display: none">获取CAS数据</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- END FORM-->
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+    </div>
+{% endblock content %}
+{% block script %}
+    <script type="text/javascript">
+    common.initmenu("log", "syssettings");
+
+    function disable_npp_name() {
+        var self = $("#id_npp");
+        self.attr("disabled", true);
+        self.val('');
+    }
+
+    function enable_npp_name() {
+        var self = $("#id_npp");
+        self.attr("disabled", false);
+    }
+
+    function disable_acl_name() {
+        var self = $("#id_acl");
+        self.attr("disabled", true);
+        self.val('')
+    }
+
+    function enable_acl_name() {
+        var self = $("#id_acl");
+        self.attr("disabled", false);
+    }
+
+    $("#id_vswitch").on("change", function () {
+        var vswitch = $(this).val();
+        if (vswitch.length != 0) {
+            enable_npp_name()
+        } else {
+            disable_npp_name();
+            disable_acl_name();
+        }
+    });
+
+    $("#id_npp").on("change", function () {
+        var npp_name = $(this).val();
+        if (npp_name.length != 0) {
+            enable_acl_name();
+        } else {
+            disable_acl_name();
+        }
+    });
+
+    function hide_sys(){
+        $(".sys").hide();
+    }
+    function show_sys(){
+        $(".sys").show();
+    }
+    function hide_save_btn(){
+        $("#id_save").hide();
+    }
+    function show_save_btn(){
+        $("#id_save").show();
+    }
+    function hide_reload_btn(){
+        $("#id_reload_cas").hide();
+    }
+    function show_reload_btn(){
+        $("#id_reload_cas").show();
+    }
+    function disable_username_password(){
+        $("#id_cas_username").attr("readonly", true);
+        $("#id_cas_password").attr("readonly", true);
+    }
+    function enable_username_password(){
+        $("#id_cas_username").attr("readonly", false);
+        $("#id_cas_password").attr("readonly", false);
+    }
+    function update_vswitch_block(content){
+        $(".vswitch_block").html(content);
+    }
+    function update_npp_block(content){
+        $(".npp_block").html(content);
+    }
+    function update_acl_block(content){
+        $(".acl_block").html(content);
+    }
+
+    $("#id_cas_address").on("change", function(){
+        hide_sys();
+        hide_save_btn();
+        show_reload_btn();
+        enable_username_password();
+    });
+
+    $("#id_reload_cas").on("click", function(e) {
+        loading();
+        e.preventDefault();
+        // cas地址修改后需要重新获取对应的设置信息
+        var cas_address = $("#id_cas_address").val();
+        var cas_username = $("#id_cas_username").val();
+        var cas_password = $("#id_cas_password").val();
+        var data = {
+            "cas_address": cas_address,
+            "cas_username": cas_username,
+            "cas_password": cas_password
+        };
+        var opt = {"url": "{% url 'ajax_reload_cas_settings' %}", "data": data, "async": true};
+        common.ajaxpostrequest(opt, function (rsp) {
+            if (rsp["result"] == "ok") {
+                update_vswitch_block(rsp["vswitch_block"]);
+                update_npp_block(rsp["npp_block"]);
+                update_acl_block(rsp["acl_block"]);
+                show_sys();
+                disable_username_password();
+                hide_reload_btn();
+                show_save_btn();
+            } else {
+                notie.alert(3,rsp['message'],3);
+            }
+            spinner.stop();
+            $(".bg").fadeOut(2000);
+        });
+    });
+
+    $(document).ready(function() {
+        $("#id_settings_form").bootstrapValidator({
+            message: '字段不合法',
+            feedbackIcons: {
+                valid: 'fa fa-check',
+                invalid: 'fa fa-remove',
+                validating: 'fa fa-refresh'
+            },
+            fields: {
+                desktop_count: {
+                    validators: {
+                        notEmpty: {
+                            message: '学生机数量不能为空'
+                        },
+                        integer: {
+                            message: '请输入正确的数字'
+                        }
+                    }
+                },
+                cas_address: {
+                    validators: {
+                        notEmpty: {
+                            message: 'CAS CVM地址不能为空'
+                        },
+                        regexp: {
+                            regexp: /^http:\/\/\d+\.\d+\.\d+\.\d+:\d+/,
+                            message: '请输入合法的地址'
+                        }
+                    }
+
+                },
+                cas_username: {
+                    validators: {
+                        notEmpty: {
+                            message: '用户名不能为空'
+                        }
+                    }
+
+                },
+                cas_password: {
+                    validators: {
+                        notEmpty: {
+                            message: '密码不能为空'
+                        }
+                    }
+
+                },
+                white_list: {
+                    validators: {
+                        notEmpty: {
+                            message: '白名单不能为空'
+                        },
+                       regexp:{
+                                regexp:/^((?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\/(?:0|[1-2][0-9]|3[0-2]?),?)*$/,
+                                message:"请输入格式正确的白名单"
+                            }
+
+                    }
+                },
+                vswitch: {
+                    validators: {
+                        notEmpty: {
+                            message: 'vSwitch虚拟交换机不能为空'
+                        }
+                    }
+
+                },
+                npp: {
+                    validators: {
+                        notEmpty: {
+                            message: '网络策略模板不能为空'
+                        }
+                    }
+                }
+            }
+        })
+        .on('success.form.bv', function(e) {
+            // Prevent form submission
+            e.preventDefault();
+            // Get the form instance
+            var $form = $(e.target);
+            loading();
+            // ajax 提交
+            $.ajax({
+                type: "POST",
+                url: "{% url 'ajax_edit_settings' %}",
+                data: $form.serialize(),
+                success: function (res) {
+                    if (res['result'] == 'ok') {
+                        notie.alert(1,"系统设置成功",2);
+                        common.reload_page();
+                    } else {
+                        notie.alert(3,res['message'],3);
+                    }
+                    spinner.stop();
+                }
+            });
+            $(".bg").fadeOut(2000);
+        });
+
+        {% if not is_conn %}
+            hide_sys();
+            hide_save_btn();
+            show_reload_btn();
+            enable_username_password();
+        {% endif %}
+    })
+    </script>
+
+{% endblock script %}
+
+{% block  site_polling %}
+{# 保持空,用于屏蔽全局轮询 #}
+{% endblock %}

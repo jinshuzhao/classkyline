@@ -1,0 +1,73 @@
+h1 { font-size:20px; }
+form {
+    width:615px;
+    height:501px;
+    background:url(../images/bg9.png) no-repeat center;
+    padding:12px 0 12px 40px;
+}
+fieldset { border:none; }
+fieldset legend { display:none; }
+#textfield {
+    width:16em;
+    border:solid 1px #aaa;
+    position:relative;
+    top:-3px;
+}
+#textarea {
+    width:30em;
+    height:6.4em;
+    border:solid 1px #aaa;
+}
+.checkbox {
+    border:solid 1px #d8bca9;
+    position:relative;
+    top:3px;
+    left:-2px;
+}
+select { border:solid 1px #d8bca9; }
+.radio {
+    border:solid 1px #d8bca9;
+    position:relative;
+    top:3px;
+    left:-1px;
+}
+.title {
+    display:block;
+    font-weight:bold;
+}
+.top { margin-top:70px; }
+.top1 { margin-top:8px; }
+.center { text-align:center; }
+.red {
+	color:red;
+    margin-left:-10px;
+    padding-right:2px;
+    display:none;
+}
+.error {
+	color:white;
+    background:red;
+    padding:2px;
+    margin:0 4px;
+}
+.hide {
+    display:none;
+}
+.tip {
+ 	color:white;
+    background:blue;
+    padding:2px;
+    margin:0 4px;
+}
+h3 {
+    color:#990;
+    margin:3px 0;
+}
+p {
+    margin:0;
+    padding:4px 0;
+}
+input {
+ 	padding:4px;
+}
+

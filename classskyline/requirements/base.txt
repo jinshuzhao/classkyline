@@ -1,0 +1,6 @@
+Django==1.7.8
+requests>=2.6.2
+paramiko>=1.15.2
+pytz>=2015.2
+h3cloudclass.activation==0.0.2
+django-picklefield==0.3.2

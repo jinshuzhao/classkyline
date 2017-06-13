@@ -1,0 +1,49 @@
+body{font-family: "宋体",arial, helvetica, sans-serif;
+}
+
+table{
+    border-collapse: collapse;
+    font-size: 75%;
+    line-height: 1.1;
+}
+
+th{
+    font-weight: normal;
+    text-align: left;
+    padding-left: 15px;
+}
+
+thead th{
+    background: #c6ceda;
+    border-style: solid;
+    border-color: #fff #fff #888 #fff;
+    border-width: 1px 1px 2px 1px;
+    padding-left: .5em;
+}
+
+td:only-of-type{
+    background: #eee url(../images/arrow.gif) no-repeat 12px 50%;
+    font-weight: bold;
+    color: #444;
+    padding-left: 28px;
+}
+
+th,td{
+    padding:.3em .5em;
+    cursor: pointer;
+}
+
+tr:hover{
+    background: #ff9;
+}
+
+tbody th:not(.end){
+    background: url(../images/dots.gif) no-repeat 15px 56%;
+    padding-left: 26px;
+}
+
+tbody th.end{
+    background: url(../images/dots2.gif) no-repeat 15px 56%;
+    padding-left: 26px;
+}
+

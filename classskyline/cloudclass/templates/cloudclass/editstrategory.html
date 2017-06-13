@@ -1,0 +1,130 @@
+{% extends 'bootstrapcommon.html' %}
+{% load static from staticfiles %}
+
+{% block ext_css %}
+    <style type="text/css">
+        body {
+            background-color: #fff !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="portlet-body form" style="padding: 0;">
+                <!-- BEGIN FORM-->
+                <div class="form-horizontal">
+
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">自动上课</label>
+
+                            <div class="col-sm-6 controls ">
+                                <div class="checkbox-list">
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" style="margin-left:10px;"> </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">自动挂载网络磁盘</label>
+
+                            <div class="col-sm-6 controls ">
+                                <div class="checkbox-list">
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" style="margin-left:10px;">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">云桌面网络方式</label>
+
+                            <div class="col-sm-6 controls ">
+                                <div class="checkbox-list">
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" style="margin-left:10px;">Bridge
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" style="margin-left:10px;">NAT
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">云桌面关机后还原系统</label>
+
+                            <div class="col-sm-6 controls ">
+                                <div class="checkbox-list">
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" style="margin-left:10px;">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">开课桌面启动策略</label>
+
+                            <div class="col-sm-6 controls ">
+                                <div class="checkbox-list">
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" style="margin-left:10px;">启动所有桌面
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" style="margin-left:10px;">只启动有终端连接的桌面
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">桌面启动后通知策略</label>
+
+                            <div class="col-sm-9 controls ">
+                                <div class="checkbox-list">
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" style="margin-left:10px;">桌面一启动立即通知终端
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" style="margin-left:10px;">所有桌面都启动完毕后通知终端
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-danger" style="display: none;">
+                            <label id="errorMessage"></label>
+                        </div>
+
+                        <div class="form-actions">
+                            <div class="row">
+                                <div class="col-sm-offset-3 col-sm-9">
+                                    <!--<button class="btn blue" id="btnadd">增加</button>-->
+                                    <button class="btn blue" id="btnCreateServer">保存</button>
+
+                                    <button class="btn" id="btnCancelServer">取消</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- END FORM-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="hidflavorid"/>
+    <input type="hidden" id="hidtimes" value="0"/>
+{% endblock content %}
+
+{% block script %}
+
+{% endblock script %}

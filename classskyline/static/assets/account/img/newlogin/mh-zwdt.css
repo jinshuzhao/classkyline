@@ -1,0 +1,81 @@
+@charset "utf-8";
+/*浙江政务服务网 2014.5.4 */
+/*说明：此样式表为固定样式，禁止修改，如果需要修改，请通知负责人。*/
+
+/*网页全局样式开始*/
+	body
+	{
+		/*body基本样式开始*/
+			font-size: 9pt; color:#3D3D3D; font-family:'微软雅黑',verdana;
+			margin:0px; padding:0px;
+		/*body基本样式结束*/
+
+		/*body扩展样式开始*/
+			background-repeat: repeat-y;
+			background-position: center;
+			scrollbar-face-color:#b9b9b9;
+			scrollbar-highlight-color:#b9b9b9;
+			scrollbar-shadow-color:#b9b9b9;
+			scrollbar-3dlight-color:#b9b9b9;
+			scrollbar-darkshadow-color:#b9b9b9;
+			scrollbar-arrow-color:#F0F0F0;
+			scrollbar-track-color:#F0F0F0;
+			scrollbar-base-color:#F0F0F0;
+
+			/*拖动条的表面颜色*/
+			scrollbar-face-color:#fbf6e8; MARGIN: 0px;  
+
+			/*亮边*/  
+			scrollbar-highlight-color:#fbf6e8;
+
+			/*暗边*/
+			scrollbar-shadow-color:#aaaaaa;
+			scrollbar-3dlight-color:#aaaaaa; 
+			
+			/*箭头颜色*/
+			scrollbar-arrow-color:#aaaaaa;  
+
+			/*拖动区域(TrackBar)颜色*/
+			scrollbar-track-color:#fbf6e8;	
+			scrollbar-darkshadow-color:#fbf6e8
+		/*body扩展样式结束*/
+	}
+	td,p,span {font-size:9pt;line-height:24px;margin:0px; padding:0px;}
+/*网页全局样式结束*/
+
+
+/*版通基本样式开始*/
+	/*文章标题样式*/
+	.title{font-size:16pt;color:#3D3D3D;font-weight:bold;line-height:35px;}
+
+	/*底层栏目页标题列表及文章正文样式 大字体*/
+	.bt_content{font-size: 10.5pt; text-decoration:none; color:#3D3D3D ;line-height:26px; }
+
+	/*时间显示样式*/
+	.bt_time {  font-size: 7pt; color: #999999; FONT-FAMILY: Verdana}	
+	.bt_date {  font-size: 7pt; color: #999999; FONT-FAMILY: Verdana}	
+/*版通基本样式结束*/
+
+
+/*各种颜色样式 可自行扩展*/
+	.blue{color:#406EC2; font-size: 9pt; text-decoration:none; }
+	.white{color:#ffffff; font-size: 9pt; text-decoration:none; }
+	.red {color:#C70506;font-size: 9pt;text-decoration:none; }
+
+
+/*超链接样式开始 可自行扩展*/
+
+	a.bt_more { text-decoration:none; color:#3D3D3D;font-family:'微软雅黑'}
+	a.bt_more:hover { text-decoration:none; color:#ff0000;font-family:'微软雅黑'} 
+
+	a { text-decoration:none; color:#3D3D3D;font-size:9pt;line-height:24px;font-family:'微软雅黑'}
+	a:hover { color:#ff0000;text-decoration:none;font-size:9pt;line-height:24px;font-family:'微软雅黑'}
+	
+s
+/*特殊标题样式*/
+    bt_titile{font-size:12pt; font-weight:bold; color:#555555; font-family:'微软雅黑'}
+
+
+
+
+

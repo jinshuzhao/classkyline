@@ -1,0 +1,1270 @@
+{% extends "sitebase.html" %}
+{% load static from staticfiles %}
+
+{% block ext_style %}
+    <link href="{% static 'assets/global/css/jquery.fancybox.css' %}" rel="stylesheet" type="text/css">
+
+    <style type="text/css">
+        .gallery-item {
+            text-align: center;
+        }
+
+        .gallery-item .photo {
+            border: 2px solid #193050;
+            background-image: url("../../../static/assets/admin/layout/img/new_images/course_bg.png");
+            background-size: cover;
+            cursor: pointer;
+        }
+        .gallery-item .photo img.stop {
+            filter: grayscale(100%);
+            -webkit-filter: grayscale(100%);
+            -moz-filter: grayscale(100%);
+            filter: Gray;
+        }
+
+        .gallery-item p {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 16px;
+
+        }
+
+        .gallery-item p a {
+            text-decoration: none;
+            color: #a0a0a0;
+        }
+
+        .gallery-item p a:hover {
+            color: #fff;
+        }
+
+        #SWFUpload_0, #SWFUpload_1 {
+            margin-left: -20px;
+        }
+
+        .checkcourse {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: none;
+        }
+
+        canvas {
+            z-index: 100000000000;
+            position: absolute;
+            top: 50%;
+            margin-top: -200px;
+            left: 50%;
+            margin-left: -200px;
+        }
+
+        .radio-list ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        h4.modal_title {
+            font-family: "微软雅黑";
+        }
+
+        .modal-fstyle {
+            width: 90%;
+            border-top: none;
+        }
+
+        .modal-bstyle {
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .col-sm-3 {
+            text-align:right;
+            line-height:34px;
+        }
+
+        .modal i.fa-refresh {
+            font-size: 18px;
+            line-height: 34px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .modal-footer {
+            text-align: center;
+        }
+
+        .tab-pane {
+            min-height: 250px;
+        }
+
+        .control-name,.control_desc,.control_base-image,.control_os_version{
+        height: 30px;
+          line-height: 30px;
+          font-size: 16px;
+          color: #aaa;
+        }
+        .radio input[type=radio]{
+        margin-left: -10px;
+        }
+        .image-header {
+            font-weight: bolder;
+            color: #fff;
+        }
+
+        .close {
+            width: 20px !important;
+            height: 20px !important;
+            background: none !important;
+            text-indent: 0 !important;
+            color: #fff !important;
+            opacity: 1 !important;
+        }
+
+        .form-group .help-block {
+            padding-bottom: 0 !important;
+        }
+
+        table.table-color {
+            border: 1px solid #E0E0E0;
+        }
+
+        table.table-color > thead > tr > th,
+        table.table-color > tbody > tr > td {
+            border-bottom: none;
+            border-left: 1px solid #e0e0e0;
+
+        }
+
+        .teacher-list span {
+            display: inline-block;
+            margin-right: 30px;
+            margin-left: -2px;
+
+        }
+
+        .teacher-list tr td:first-child {
+            width: 250px;
+        }
+
+        .teacher-list tr td input[type=radio] {
+            margin-left: -10px !important;
+
+        }
+
+        .photo h5{
+            word-break: break-all;
+            word-wrap: normal;;
+        }
+        .importcourse {
+            line-height:35px;
+        }
+        .importcourse a {
+            font-size: 14px;
+            display: inline-block;
+            width: 60px;
+        }
+        .importcourse ul {
+            margin-left: -20px;
+        }
+        .importcourse ul li i {
+            cursor: auto !important;
+            font-size: 15px !important;
+            margin: 0 5px !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <!-- BEGIN PAGE HEADER-->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="/">主页</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="#">课程</a>
+            </li>
+        </ul>
+    </div>
+    <!-- END PAGE HEADER-->
+
+    <div class="row margin-bottom-40">
+        <!-- BEGIN CONTENT -->
+        <div class="col-md-12">
+            <!-- BEGIN TAB PORTLET-->
+            <div class="portlet box darkgray">
+                <div class="portlet-title" style="padding:0;">
+
+                    <div class="caption" style="display: none;">
+                        <i class="fa fa-book"></i>
+                    </div>
+
+                    <ul class="nav nav-tabs" style="float:left;">
+                        <li class="active">
+                            <a href="#portlet_tab1" data-toggle="tab" style="margin-left:0;">
+                                课程列表 </a>
+                        </li>
+                        <li>
+                            <a href="#portlet_tab2" data-toggle="tab">
+                                软件安装文件</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="portlet-body">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="portlet_tab1">
+                            <div class="row">
+                                <div class="actions pull-right">
+                                    <a href="#" class="help"><i class="fa fa-question"></i>帮助</a>
+                                    <a href="#" class="btnimport" data-toggle="modal" data-target="#courseImportModal">
+                                        <i class="fa fa-share"></i>导入课程</a>
+                                    <a href="#" class="btnadd" data-toggle="modal" id="courseAddImage">
+                                        <i class="fa fa-plus"></i>新建</a>
+
+                                    <div class="zoom" style="display:none;" id="data">
+                                        <a href="{% static 'assets/global/img/social/course1.jpg' %}" class="fancybox-help" rel="fancybox-help">
+                                            <img class="fancy-img" src="{% static 'assets/global/img/social/course1.jpg' %}"/>
+                                        </a>
+                                        <a href="{% static 'assets/global/img/social/course2.jpg' %}" class="fancybox-help" rel="fancybox-help">
+                                            <img src="{% static 'assets/global/img/social/course2.jpg' %}"/>
+                                        </a>
+                                        <a href="{% static 'assets/global/img/social/course3.jpg' %}" class="fancybox-help" rel="fancybox-help">
+                                            <img src="{% static 'assets/global/img/social/course3.jpg' %}"/>
+                                        </a>
+                                        <a href="{% static 'assets/global/img/social/course4.jpg' %}" class="fancybox-help" rel="fancybox-help">
+                                            <img src="{% static 'assets/global/img/social/course4.jpg' %}"/>
+                                        </a>
+                                        <a href="{% static 'assets/global/img/social/course5.jpg' %}" class="fancybox-help" rel="fancybox-help">
+                                            <img src="{% static 'assets/global/img/social/course5.jpg' %}"/>
+                                        </a>
+                                        <a href="{% static 'assets/global/img/social/course6.jpg' %}" class="fancybox-help" rel="fancybox-help">
+                                            <img src="{% static 'assets/global/img/social/course6.jpg' %}"/>
+                                        </a>
+                                        <a href="{% static 'assets/global/img/social/course7.jpg' %}" class="fancybox-help" rel="fancybox-help">
+                                            <img src="{% static 'assets/global/img/social/course7.jpg' %}"/>
+                                        </a>
+                                        <a href="{% static 'assets/global/img/social/course8.jpg' %}" class="fancybox-help" rel="fancybox-help">
+                                            <img src="{% static 'assets/global/img/social/course8.jpg' %}"/>
+                                        </a>
+                                         <a href="{% static 'assets/global/img/social/course9.jpg' %}" class="fancybox-help" rel="fancybox-help">
+                                            <img src="{% static 'assets/global/img/social/course9.jpg' %}"/>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row margin-bottom-10" id="courselist">
+                                {% for course in courses %}
+                                    <div class="col-md-3 col-sm-4 gallery-item margin-top-10">
+                                        <div class="photo" title="{{ course.refname|default_if_none:'' }}" flag="{{ course.uuid }}"
+                                             style="position: relative;padding-left:10px;padding-right:10px;padding-bottom:5px;min-height: 215px">
+                                            <p style="text-align: center;position:absolute;top:-5px;right:10px;">
+                                                <a class="btntop" title="置顶课程"
+                                                   flag="{{ course.uuid }}">
+                                                    <i class="fa fa-arrow-circle-up" style="font-size:1.5em;margin-left: 10px;"></i>
+                                                </a>
+                                                <a class="btnInstallSoftware" data-uuid="{{ course.uuid }}"
+                                                   data-name="{{ course.name }}"
+                                                   data-refname="{{ course.refname|default_if_none:'' }}" title="安装软件">
+                                                    {% if course.id|slugify  == new_course_id %}
+                                                        <i class="fa fa-eye install-software" style="font-size:1.5em;margin-left: 10px" data-placement="top" title="请安装软件"></i>
+                                                    {% else %}
+                                                        <i class="fa fa-eye" style="font-size:1.5em;margin-left: 10px"></i>
+                                                    {% endif %}
+                                                </a>
+                                                <a title="复制" class="courseCopy"
+                                                   data-course_id="{{ course.id }}">
+                                                    <i class="fa fa-copy" style="font-size:1.5em;margin-left: 10px"></i>
+                                                </a>
+                                                <a title="修改配置" class="courseEdit"
+                                                   data-name="{{ course.name }}"
+                                                   data-desc="{{ course.desc }}"
+                                                   data-uuid="{{ course.uuid }}"
+                                                   data-profile="{{ course.profile.id }}"
+                                                   data-visibility="{{ course.visibility }}"
+                                                   data-image_id="{{ course.image.parent.id }}"
+                                                   data-course_id="{{ course.id }}"
+                                                   data-os_version="{{ course.os_version }}">
+                                                    <i class="fa fa-pencil" style="font-size:1.5em;margin-left: 10px"></i>
+                                                </a>
+                                                <a title="删除课程" data-course_id="{{ course.id }}" class="delCourse">
+                                                    <i class="fa fa-trash" style="font-size:1.5em;margin-left: 10px"></i>
+                                                </a>
+                                            </p>
+                                            {% if course.visibility == 0 %}
+                                            <img src="{{ course.img }}" class="img-responsive stop"/>
+                                            {% else %}
+                                            <img src="{{ course.img }}" class="img-responsive"/>
+                                            {% endif %}
+
+                                            <h5 class="image-header">{{ course.name }}</h5>
+
+                                            <div class="opacity"
+                                                 style="background: #000;opacity: 0.3;width:100%;height:30px;position:absolute;bottom:0;margin-left:-10px;display: none;"></div>
+                                            <div class="opacity_tit"
+                                                 style="position:absolute;bottom:6px;color:#91959c;display: none;text-align: center;margin-left: -10px;width:100%;">
+                                                <span>状态：</span><span class="course_status">运行中</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="portlet_tab2">
+                            <div class="actions pull-right">
+                                <a class="btn refreshsoft"><i class="fa fa-refresh"></i>刷新</a>&nbsp;
+                                <a data-href="{{ softftp }}" class="btn" id="upload_3"><i class="fa fa-upload"></i>上传</a>
+                            </div>
+                            <table class="table table-striped table-bordered table-hover" id="sample_3">
+                                <thead>
+                                <tr>
+                                    <th>软件名称</th>
+                                    <th>文件大小</th>
+                                    <th>创建时间</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody class="softlist"></tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- END TAB PORTLET-->
+        </div>
+
+    </div>
+    <!-- END CONTENT -->
+
+    <!-- 新建base -->
+    <div class="modal fade bs-example-modal-lg" id="courseImageModal" tabindex="-1" role="dialog"
+         aria-labelledby="createBase">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal_title">修改课程配置</h4>
+                </div>
+                <div class="modal-body modal-bstyle">
+                    <form class="form-horizontal" id="courseImageForm" method="post">
+                        {% csrf_token %}
+                        {{ form.course_id }}
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="red">*</span>{{ form.name.label }}
+                            </label>
+
+                            <div class="col-sm-10">
+                                <div class="control-group">
+                                    {{ form.name }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{{ form.desc.label }}</label>
+
+                            <div class="col-sm-10">
+                                <div class="control-group">
+                                    {{ form.desc }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label "><span class="red">*</span>{{ form.base_image.label }}</label>
+
+                            <div class="col-sm-10">
+                                {{ form.base_image }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="red">*</span>{{ form.os_version.label }}
+                            </label>
+
+                            <div class="col-sm-10 fa-position">
+                                {{ form.os_version }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{{ form.visibility.label }}</label>
+
+                            <div class="col-sm-10 controls ">
+                                <div class="radio-list">
+                                    {{ form.visibility }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="padding-top:1px;">{{ form.profile.label }}</label>
+
+                            <div class="col-sm-10 controls ">
+                                <div class="radio-list course_configtype">
+                                    {{ form.profile }}
+                                    <span class="help-inline" id="config_info"
+                                          style="padding-top:0;width:75%;line-height: 20px;">一般情况下，标准配置就能满足要求，当课程需要安装某些高资源占用的应用程序时，可以使用高性能配置。</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer modal-fstyle">
+                            <button type="submit" class="btn btn-primary">保存</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="courseImportModal" tabindex="-1" role="dialog"
+         aria-labelledby="createBase">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal_title">导入课程</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="courseImportForm" method="post">
+                        <div class="form-group ">
+                            <label class="col-sm-3">温馨提示：</label>
+                            <div class="col-sm-7 importcourse">
+                                <div>
+                                    <span>该功能用于一键导入课程</span>
+                                </div>
+                                <ul>
+                                    <li>步骤 1：<a href="{{ imagesftp }}">点击此处</a>通过 FTP 软件上传课程导入包</li>
+                                    <li>步骤 2：上传成功后，点击<i class="fa fa-refresh"></i>图标刷新课程导入包列表</li>
+                                    <li>步骤 3：在下方课程导入包下拉列表处选择要导入的课程，点击“导入”按钮执行导入</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="pkg_files" class="col-sm-3"><span class="red">*</span>课程导入包</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" name="pkg_files" id="pkg_files">
+                                    <option value="">选择文件</option>
+                                </select>
+                            </div>
+                            <i class="fa fa-refresh" id="refresh_pkgfiles" title="刷新课程导入包"></i>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" id="courseImportFormSubmit">导入</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bs-example-modal-lg" id="courseAddImageModal" tabindex="-1" role="dialog"
+         aria-labelledby="createBase">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true"><i class="fa fa-times fa-2x"></i></span></button>
+                    <h4 class="modal_title">步骤一: 确认软件已上传</h4>
+                </div>
+                <div class="modal-body modal-bstyle">
+
+                    {# 软件确认列表 #}
+                    <div class="tab-pane active" id="tab0">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>软件名称</th>
+                                <th>文件大小</th>
+                                <th>创建时间</th>
+                            </tr>
+                            </thead>
+                            <tbody class="soft_list_without_actions"></tbody>
+                        </table>
+                        <hr />
+                        <div class="help-block">课程制作后需要安装软件，请确认所需软件已经上传。</div>
+                        <div class="modal-footer modal-fstyle">
+                            <button data-href="#portlet_tab2" type="button" class="btn btn-default" id="jumpToSoftware">去上传软件</button>
+                            <button type="button" class="btn btn-success" id="refreshModalSoft">刷新<i class="fa fa-refresh" style="line-height: 0"></i></button>
+                            <button type="button" class="btn btn-primary to-tab1" >下一步</button>
+                        </div>
+                    </div>
+
+
+                    <form class="form-horizontal" id="courseAddImageForm" method="post" onsubmit="return false">
+                        {% csrf_token %}
+                        {{ form.course_id }}
+
+                        <div class="tab-pane active" id="tab1" style="display:none">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label "><span class="red">*</span>{{ form.base_image.label }}</label>
+
+                                <div class="col-sm-9">
+                                    {{ form.base_image }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><span class="red">*</span>{{ form.os_version.label }}
+                                </label>
+
+                                <div class="col-sm-9 fa-position">
+                                    {{ form.os_version }}
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="help-block col-sm-offset-2">选择所需的基础镜像来制作课程,如果没有所需镜像，前往<a href="{% url 'images' %}">镜像页面</a>制作基础镜像，并确保镜像已发布。</div>
+                            <div class="modal-footer modal-fstyle">
+                                <button type="button" class="btn btn-default to-tab0">上一步</button>
+                                <button type="button" class="btn btn-primary nextbtn" disabled>下一步</button>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="tab2" style="display: none;">
+                              <div class="form-group">
+                                <label class="col-sm-2 control-label"><span class="red">*</span>{{ form.name.label }}
+                                </label>
+
+                                <div class="col-sm-9">
+                                    <div class="control-group">
+                                        {{ form.name }}
+                                    </div>
+                                </div>
+                            </div>
+                              <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ form.desc.label }}</label>
+
+                                <div class="col-sm-9">
+                                    <div class="control-group">
+                                        {{ form.desc }}
+                                    </div>
+                                </div>
+                            </div>
+                              <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ form.visibility.label }}</label>
+
+                                <div class="col-sm-9 controls ">
+                                    <div class="radio-list">
+                                        {{ form.visibility }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"
+                                       style="padding-top:1px;">{{ form.profile.label }}</label>
+
+                                <div class="col-sm-9 controls ">
+                                    <div class="radio-list course_configtype">
+                                        {{ form.profile }}
+                                        <span class="help-inline" id="config_info"
+                                              style="padding-top:0;width:75%;line-height: 20px;">一般情况下，标准配置就能满足要求，当课程需要安装某些高资源占用的应用程序时，可以使用高性能配置。</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer modal-fstyle">
+                                <button type="button" class="btn btn-default upstepbtn">上一步</button>
+                                <button type="button" class="btn btn-primary nexsecondtbtn" disabled>下一步</button>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="tab3" style="display: none;">
+                            <div  class="form-group">
+                                  <label class="col-sm-2 control-label"><span class="red">*</span>{{ form.name.label }}
+                                </label>
+                                <div class="col-sm-9">
+                                    <div class="control-group control-name"></div>
+                                 </div>
+                            </div>
+                            <div class="form-group">
+                                  <label class="col-sm-2 control-label">{{ form.desc.label }}</label>
+
+                                <div class="col-sm-9">
+                                    <div class="control-group control_desc"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label "><span class="red">*</span>{{ form.base_image.label }}</label>
+
+                                <div class="col-sm-9">
+                                     <div class="control-group control_base-image"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><span class="red">*</span>{{ form.os_version.label }}</label>
+
+                                  <div class="col-sm-9">
+                                     <div class="control-group control_os_version"></div>
+                                </div>
+                            </div>
+                            
+                            <hr />
+                            <div class="help-block col-sm-offset-2">保存后一些信息将无法修改，请确认信息正确</div>
+
+                            <div class="help-block"></div>
+                            <div class="modal-footer modal-fstyle">
+                                <button type="button" class="btn btn-default upsecondstep">上一步</button>
+                                <button type="button" id="createCourseAndOpen" class="btn btn-success">保存并开始安装软件</button>
+                                <button type="submit" id="createCourseSave" class="btn btn-primary">仅保存</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="hid_id" value="">
+
+    {# 软件确认 #}
+    <div class="modal fade bs-example-modal-lg" id="softwareCheckModal" tabindex="-1" role="dialog"
+         aria-labelledby="createBase">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true"><i class="fa fa-times fa-2x"></i></span></button>
+                    <h4 class="modal_title">确认所需软件已上传</h4>
+                </div>
+                <div class="modal-body modal-bstyle">
+
+                    {# 软件确认列表 #}
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>软件名称</th>
+                            <th>文件大小</th>
+                            <th>上传时间</th>
+                        </tr>
+                        </thead>
+                        <tbody class="soft_list_without_actions"></tbody>
+                    </table>
+                    <hr />
+                    <div class="help-block">所需软件需要先上传再进入虚拟机安装。若需上传点击【上传软件】按钮上传，上传完成后【刷新】列表。</div>
+                    <div class="modal-footer modal-fstyle">
+                        <button data-href="{{ softftp }}" type="button" class="btn btn-default" id="uploadSoftware">上传软件</button>
+                        <button type="button" class="btn btn-success" id="btnRefreshSoftwareCheck">刷新<i class="fa fa-refresh" style="line-height: 0"></i></button>
+                        <button type="button" class="btn btn-primary" id="btnSoftwareStartInstall">开始安装</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+    <script src="{% static 'assets/global/plugins/upload/jquery.uploadify.min.js' %}"></script>
+    <script src="{% static 'assets/global/scripts/jquery.fancybox.pack.js' %}"></script>
+    <script src="{% static 'assets/global/scripts/form-wizard.js' %}"></script>
+
+    <script type="text/javascript">
+        // tooltip
+        $(function () { $(".install-software").tooltip('show'); });
+
+        // 上传软件
+        $("#upload_3").on("click", function() {
+            var _self = $(this);
+            location.href = _self.data("href");
+        });
+
+        // 复制课程
+        $(document).on("click", ".courseCopy", function() {
+            var _self = $(this);
+            $.MsgBox.Confirm("提示", "确认复制该课程？复制操作耗时较长,请耐心等待~", function() {
+                loading();
+                var course_id =_self.data("course_id");
+                var opt = {"url": "{% url 'ajax_copy_course' %}", "data": {"course_id": course_id}, "async": true};
+
+                common.ajaxpostrequest(opt, function(res) {
+                    if (res["result"] == "ok") {
+                        notie.alert(1, "复制成功", 2);
+                        common.reload_page();
+                    } else {
+                        notie.alert(3, res["message"], 3);
+                    }
+                    spinner.stop();
+                    $(".bg").fadeOut(2000);
+                })
+            })
+        });
+
+        //查看课程
+        function vncview(uuid, name, title) {
+            loading();
+            var opt = {
+                "url": "{% url 'ajax_start_vnc' %}",
+                "data": {"uuid": uuid, "name": name, "features": "share", "type": "course"},
+                "async": true
+            };
+            common.ajaxpostrequest(opt, function(rsp) {
+                if (rsp["result"] == "ok"){
+                    var ip = rsp['ip'];
+                    var targetip = rsp['targetip'];
+                    var open_url = "{% url 'vnc_view' %}?name=" + name + "&uuid=" + uuid + "&ip=" + ip + "&targetip=" + targetip;
+                    window.open(open_url, name, 'fullscreen=1,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=yes,location=no, status=no');
+                } else {
+                    notie.alert(3, rsp["message"], 3);
+                }
+                spinner.stop();
+                $(".bg").fadeOut(2000);
+            });
+        }
+
+        /* 置顶课程 */
+        function topcourse(id) {
+            var opt = {"url": "{% url 'ajax_top_course' %}", "data": {"id": id}, "async": true};
+            common.ajaxpostrequest(opt, function (rsp) {
+                if (rsp["result"] == "ok") {
+                    notie.alert(1,"课程置顶成功",2);
+                    common.reload_page();
+                }
+            });
+        }
+
+        // softs列表
+        function initList(opt, command, classname) {
+            common.ajaxpostrequest(opt, function (rsp) {
+                if (rsp != null) {
+                    var str = "";
+                    var datalist = rsp['softs'];
+                    for (i = 0; i < datalist.length; i++) {
+                        var info = datalist[i];
+                        switch (command) {
+                            case "softs":
+                                str += "<tr><td>" + info.name + "</td><td>" + info.size + "</td><td>" + info.ctime + "</td><td><a href='#' onclick='delfile(\"" + info.name + "\",3)'>删除</a></td></tr>";
+                                break;
+                            case "soft_list_without_actions":
+                                str += "<tr><td>" + info.name + "</td><td>" + info.size + "</td><td>" + info.ctime + "</td></tr>";
+                        }
+                    }
+                    $("." + classname).html(str);
+                }
+            })
+        }
+
+        /*初始化课程列表*/ //todo 合并并修改
+        var courselist;
+        function initcoursebaselist() {
+            var opt = {"url": "{% url 'ajax_course_images' %}", "data": null, "async": false};
+            common.ajaxgetrequest(opt, function (rsp) {
+                courselist = rsp["result"];
+            })
+        }
+
+        /*初始化课程模板的异步加载*/
+        function initcoursestatus() {
+            $("#courselist .gallery-item .photo").each(function () {
+                var vm_id = $(this).attr("flag");
+                if (vm_id) {
+                    getcoursestatus($(this), vm_id);
+                }
+            })
+        }
+
+        /*删除文件镜像或者软件*/
+        function delfile(name, type) {
+            $.MsgBox.Confirm("提示", "确定要删除该文件吗？", function () {
+                var opt = {url: "{% url 'ajax_del_file' %}", data: {"name": name, "type": type}, async: false};
+                common.ajaxpostrequest(opt, function (rsp) {
+                    if (rsp["rsp"] = "ok") {
+                        notie.alert(1,"文件删除成功",2);
+                        initsoftlist();
+                    }
+                })
+            });
+        }
+
+        /*获取课程状态*/
+        function getcoursestatus(dom, vm_id) {
+            var opt = {"url": "{% url 'vnc_operate' %}", "data": {"id": vm_id, "operateType": "4"}, "async": true};
+            common.ajaxpostrequest(opt, function (rsp) {
+                var status = rsp["result"];
+                if (status == "running") {
+                    dom.find(".opacity").show();
+                    dom.find(".opacity_tit").show();
+                    // dom.find(".course_status").html("运行中");
+                }
+                else {
+                    dom.find(".opacity").hide();
+                    dom.find(".opacity_tit").hide();
+                }
+            });
+        }
+
+        // 选择镜像后与操作系统版本联动
+        $("#courseAddImageModal #id_base_image").on("change", function() {
+            var modal_div = $("#courseAddImageModal");
+            var base_image = $("#id_base_image", modal_div).val();
+            if (base_image){
+                var opt = {
+                        "url": "{% url 'ajax_get_os_version_by_image_id' %}",
+                        "data": {"image_id": base_image},
+                        "async": true
+                    };
+                common.ajaxpostrequest(opt, function(res) {
+                    var os_version = res["os_version"];
+                    $("#id_os_version", modal_div).val(os_version);
+                })
+            } else {
+                $("#id_os_version", modal_div).val('');
+            }
+
+            if (base_image && $("#id_os_version", modal_div).val('')) {
+                $("button.nextbtn").attr("disabled", false);
+            } else {
+                $("button.nextbtn").attr("disabled", true);
+            }
+        });
+
+        // 课程名称为空时无法进行下一步
+        $("#courseAddImageForm #id_name").on("change", function() {
+            var self = $(this);
+            var next_btn = $("button.nexsecondtbtn");
+
+            if (self.val() && self.val().length < 64) {
+                next_btn.attr("disabled", false);
+            } else {
+                next_btn.attr("disabled", true);
+            }
+        });
+
+        // 编辑课程
+        $(".courseEdit").on("click", function() {
+            var self = $(this);
+            var modal_div = $("#courseImageModal");
+
+            var course_id = self.data("course_id");
+            var name = self.data("name");
+            var desc = self.data("desc");
+            var uuid = self.data("uuid");
+            var profile = self.data("profile");
+            var visibility = self.data("visibility");
+            var image_id = self.data("image_id");
+            var os_version = self.data("os_version");
+
+            // 给弹出框modal设置值
+            $("#id_visibility", modal_div).find("input[name='visibility']").each(function() {
+                $(this).attr("checked", false).parent().removeClass("checked");
+            });
+            $("#id_profile", modal_div).find("input[name='profile']").each(function() {
+                $(this).attr("checked", false).parent().removeClass("checked");
+            });
+
+            $("#id_course_id", modal_div).val(course_id);
+            $("#id_name", modal_div).val(name);
+            $("#id_desc", modal_div).val(desc);
+            $("#id_uuid", modal_div).val(uuid);
+            $("#id_profile", modal_div).find("input[value='" + profile + "']").attr("checked", true).parent().addClass("checked");
+            $("#id_visibility", modal_div).find("input[value='" + visibility + "']").attr("checked", true).parent().addClass("checked");
+            $("#id_base_image", modal_div).attr("disabled", "disabled").val(image_id);
+            $("#id_os_version", modal_div).val(os_version);
+            // 弹出modal
+            modal_div.modal("show");
+        });
+
+        $("#courseImageForm").bootstrapValidator({
+            feedbackIcons: {
+                valid: 'fa fa-check',
+                invalid: 'fa fa-remove',
+                validating: 'fa fa-refresh'
+            },
+            fields: {
+                name: {
+                    validators: {
+                        notEmpty: {
+                            message: "课程名称不能为空"
+                        },
+                        stringLength: {
+                            max: 20,
+                            message: "课程名称不能超过20个字符"
+                        }
+                    }
+                },
+                base_image: {
+                    validators: {
+                        notEmpty: {
+                            message: "镜像列表不能为空"
+                        }
+                    }
+                },
+                os_version: {
+                    validators: {
+                        notEmpty: {
+                            message: "操作系统版本不能为空"
+                        }
+                    }
+                }
+
+            }
+        }).on('success.form.bv', function (e) {
+            e.preventDefault();
+
+            var $form = $(e.target);
+            var opt = {
+                "url": "{% url 'ajax_edit_course_image' %}",
+                "data": $form.serialize(),
+                "async": true
+            };
+            common.ajaxpostrequest(opt, function (res) {
+                if (res["result"] == "ok") {
+                    notie.alert(1, "修改成功", 2);
+                    common.reload_page();
+                } else {
+                    notie.alert(3, res["message"], 3);
+                }
+            })
+        });
+
+        // 新建课程
+        $("#courseAddImage").on("click", function(e) {
+            e.preventDefault();
+            syncSoftList();
+            $("#courseAddImageModal").modal("show");
+        });
+
+        // 跳到上传软件
+        $("#jumpToSoftware").on("click", function(e) {
+            e.preventDefault();
+            console.log($(this).data('href'));
+            window.location.href = $(this).data('href');
+            window.location.reload();
+        });
+
+        // 刷新modal中的软件列表
+        $("#refreshModalSoft").on("click", function() {
+            var _self = $(this);
+            syncSoftList();
+            $(".fa-refresh", _self).addClass("fa-spin");
+            setTimeout(function() {
+                $(".fa-refresh", _self).removeClass("fa-spin");
+            }, 2000);
+        });
+
+        $("form#courseAddImageForm").bootstrapValidator({
+            feedbackIcons: {
+                valid: 'fa fa-check',
+                invalid: 'fa fa-remove',
+                validating: 'fa fa-refresh'
+            },
+            fields: {
+                name: {
+                    trigger: 'change',
+                    validators: {
+                        notEmpty: {
+                            message: "课程名称不能为空"
+                        },
+                        stringLength: {
+                            max: 20,
+                            message: "课程名称不能超过20个字符"
+                        }
+                    }
+                },
+                base_image: {
+                    trigger: 'change',
+                    validators: {
+                        notEmpty: {
+                            message: "镜像不能为空"
+                        }
+                    }
+                },
+                os_version: {
+                    trigger: 'change',
+                    validators: {
+                        notEmpty: {
+                            message: "操作系统版本不能为空"
+                        }
+                    }
+                }
+
+            }
+        });
+
+        function page_reload_with_new_course(course_id){
+            window.location.href = "{% url 'courses' %}?new_course_id=" + course_id;
+        }
+
+        // 创建课程
+        $("#createCourseSave").on("click", function(e) {
+            e.preventDefault();
+            loading();
+            var opt = {
+                "url": "{% url 'ajax_add_course_image' %}",
+                "data": $("form#courseAddImageForm").serialize(),
+                'async': true
+            };
+            common.ajaxpostrequest(opt, function(res) {
+                if (res["result"] == "ok") {
+                    notie.alert(1, "课程创建成功", 2);
+                    setTimeout(page_reload_with_new_course(res["coruse_id"]), 2);
+                } else {
+                    notie.alert(3, res["message"], 3);
+                }
+                spinner.stop();
+                $(".bg").fadeOut(2000);
+            })
+        });
+
+        // 创建课程并打开vnc安装
+        $("#createCourseAndOpen").on("click", function(e) {
+            e.preventDefault();
+            loading();
+            var opt = {
+                "url": "{% url 'ajax_add_course_image_and_open' %}",
+                "data": $("form#courseAddImageForm").serialize(),
+                'async': true
+            };
+            common.ajaxpostrequest(opt, function(res) {
+                if (res["result"] == "ok") {
+                    var ip = res['ip'];
+                    var targetip = res['targetip'];
+                    var uuid = res['vm_id'];
+                    var name = res['vm_name'];
+                    var open_url = "{% url 'vnc_view' %}?name=" + name + "&uuid=" + uuid + "&ip=" + ip + "&targetip=" + targetip;
+                    window.open(open_url, name, 'fullscreen=1,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=yes,location=no, status=no');
+                    common.reload_page();
+                } else {
+                    notie.alert(3, res["message"], 3);
+                }
+                spinner.stop();
+                $(".bg").fadeOut(2000);
+            })
+        });
+
+        // 初始化软件列表
+        function initsoftlist() {
+            var opt = {"url": "{% url 'ajax_get_softs' %}", "data": null, "async": true};
+            initList(opt, "softs", "softlist");
+        }
+
+        // modal中的软件列表刷新
+        function syncSoftList() {
+            var opt = {"url": "{% url 'ajax_get_softs' %}", "data": null, "async": true};
+            initList(opt, "soft_list_without_actions", "soft_list_without_actions")
+        }
+
+        $("#id_base_image").on("change", function () {
+            var id = $(this).val();
+            var opt = {"url": "{% url 'ajax_course_images' %}", "data": {"id": id}, "async": true};
+            common.ajaxpostrequest(opt, function (rsp) {
+                if (rsp["result"] != "error") {
+                    $("#id_os_version").val(rsp["result"]);
+                }
+            })
+        });
+
+        $(".delCourse").on("click", function () {
+            var course_id = $(this).data("course_id");
+            $.MsgBox.Confirm("提示", "确定要删除该课程吗？", function () {
+                loading();
+                var opt = {url: "{% url 'ajax_del_course' %}", data: {"course_id": course_id}, async: true};
+                common.ajaxpostrequest(opt, function (rsp) {
+                    if (rsp["result"] == "ok") {
+                        notie.alert(1, "删除成功", 2);
+                        common.reload_page();
+                    } else {
+                        notie.alert(3, rsp["message"], 3);
+                    }
+                    spinner.stop();
+                    $(".bg").fadeOut(2000);
+                });
+            });
+        });
+
+        $(".btntop").on("click", function () {
+            var id = $(this).attr("flag");
+            topcourse(id);
+        });
+
+        //刷新按钮点击事件（软件安装列表）
+        $(".refreshsoft").on("click", initsoftlist);
+
+        // 初始化课程压缩包列表
+        function init_pkgfiles() {
+            var opt = {
+                url: "{% url 'ajax_get_course_pkgfiles' %}",
+                data: null,
+                async: true
+            };
+            common.ajaxgetrequest(opt, function(res) {
+                var s = "<option value=''>选择文件</option>";
+                var pkg_files = res["result"];
+                for (i=0; i<pkg_files.length; i++) {
+                    var pkg = pkg_files[i];
+                    s += "<option value=" + pkg.path + ">" + pkg.name + "</option>";
+                }
+                $("#pkg_files").html(s);
+            })
+        }
+
+        $(".btnimport").on("click", init_pkgfiles);
+
+        $("#refresh_pkgfiles").on("click", function() {
+            init_pkgfiles();
+            $("#refresh_pkgfiles").addClass("fa-spin");
+            setTimeout(function() {
+                $("#refresh_pkgfiles").removeClass("fa-spin");
+            }, 2000);
+        });
+
+        // 导入课程镜像
+        $("#courseImportForm").bootstrapValidator({
+            fields: {
+                pkg_files: {
+                    validators: {
+                        notEmpty: {
+                            message: "课程导入包不能为空"
+                        }
+                    }
+                }
+            }
+        }).on('success.form.bv', function (e) {
+            e.preventDefault();
+            loading();
+            var $form = $(e.target);
+            var opt = {
+                url: "{% url 'ajax_import_course' %}",
+                data: $form.serialize(),
+                type: 'post',
+                async: true
+            };
+            common.ajaxpostrequest(opt, function (res) {
+                if (res["result"] == "ok") {
+                    $("#courseImportModal").modal("hide");
+                    notie.alert(1, "导入课程" + res["course"] + "成功！", 3);
+                    common.reload_page();
+                } else {
+                    notie.alert(3, res["message"], 3);
+                }
+            });
+            spinner.stop();
+            $(".bg").fadeOut(2000);
+        });
+
+        //帮助按钮点击事件
+        $(".help").bind("click", function () {
+            $(".fancy-img").trigger("click");
+        });
+
+        //置顶课程按钮点击事件
+        $(".fa-arrow-circle-up").on("click", function(){
+            var id=$(this).attr("flag");
+            topcourse(id);
+        });
+
+        //安装软件按钮点击事件
+        $(".btnInstallSoftware").on("click", function () {
+            syncSoftList();
+            var _self = $(this);
+            $("#softwareCheckModal").modal("show");
+            var uuid = _self.data("uuid");
+            var name = _self.data("name")
+            var refname = _self.data("refname");
+            var _btnStart = $("#btnSoftwareStartInstall");
+            _btnStart.data("uuid", uuid).data("name", name).data("refname", refname);
+        });
+
+        // 刷新检查软件modal中的软件列表
+        $("#btnRefreshSoftwareCheck").on("click", function() {
+            var _self = $(this);
+            syncSoftList();
+            $(".fa-refresh", _self).addClass("fa-spin");
+            setTimeout(function() {
+                $(".fa-refresh", _self).removeClass("fa-spin");
+            }, 2000);
+        });
+
+        // 打开上传软件
+        $("#uploadSoftware").on("click", function() {
+            var _self = $(this);
+            location.href = _self.data("href");
+        });
+
+        // 点击开始安装软件按钮
+        $("#btnSoftwareStartInstall").on("click", function() {
+            var _self = $(this);
+            vncview(_self.data("uuid"), _self.data("refname"), _self.data("name"));
+            $("#softwareCheckModal").modal("hide");
+        });
+
+        //添加课程分步走
+        $(".to-tab0").on("click", function() {
+            $("#tab1").hide();
+            $("#tab0").show();
+            $("#courseAddImageModal .modal_title").text("步骤一: 确认软件已经上传");
+        });
+        $(".to-tab1").on("click", function() {
+            $("#tab0").hide();
+            $("#tab1").show();
+            $("#courseAddImageModal .modal_title").text("步骤二: 选择镜像");
+        });
+        $(".nextbtn").on("click", function () {
+            $("#tab1").hide();
+            $("#tab2").show();
+            $("#courseAddImageModal .modal_title").text("步骤三: 完善课程基本信息");
+        });
+
+        $(".upstepbtn").on("click", function () {
+            $("#tab2").hide();
+            $("#tab1").show();
+            $("#courseAddImageModal .modal_title").text("步骤二: 选择镜像")
+        });
+
+        $(".upsecondstep").on("click", function () {
+            $("#tab3").hide();
+            $("#tab2").show();
+            $("#courseAddImageModal .modal_title").text("步骤三: 完善课程基本信息");
+        });
+
+        $(".nexsecondtbtn").on("click", function () {
+            var self = $(this);
+            var this_form = self.parents("form");
+
+            var opt = {
+                "url": "{% url 'ajax_check_course_name' %}",
+                "data": {"name": $("#id_name", this_form).val()},
+                "async": true
+            };
+            common.ajaxpostrequest(opt, function(res) {
+                if (res['result'] == "ok") {
+                    $("#tab2").hide();
+                    $("#tab3").show();
+                    $(".control-name", this_form).text($("#id_name", this_form).val());
+                    $(".control_desc", this_form).text($("#id_desc", this_form).val());
+                    $(".control_base-image", this_form).text($("#id_base_image", this_form).find("option:selected").text());
+                    $(".control_os_version", this_form).text($("#id_os_version", this_form).val());
+                    $("#courseAddImageModal .modal_title").text("步骤四: 确认课程信息")
+                } else {
+                    self.attr("disabled", true);
+                    notie.alert(3, res["message"], 3);
+                }
+            });
+
+        });
+
+        $(document).ready(function () {
+            common.initmenu("course", "");
+
+            // 初始化modal中的`是否启用`与`系统配置`
+            $("form").each(function() {
+                $(this).find("input[name='visibility']").first().attr("checked", true).parent().addClass("checked");
+                $(this).find("input[name='profile']").first().attr("checked", true).parent().addClass("checked");
+            });
+
+            initcoursestatus();
+            initsoftlist();
+
+            $(".fancybox-help").fancybox({
+                prevEffect: 'none',
+                nextEffect: 'none',
+                closeBtn: true,
+                helpers: {
+                    title: {
+                        type: 'inside'
+                    }
+                },
+                loop:false
+            })
+
+        });
+    </script>
+{% endblock script %}

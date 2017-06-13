@@ -1,0 +1,30 @@
+h1{ font-size:20px; }
+#login {
+    width:400px;
+    padding:1em 2em 0 2em;/*1em=12px*/
+    font-size:12px;
+}
+#login input:disabled#name{
+    background: #ddd url(../images/name1.gif) no-repeat 2px 2px;
+    border: 1px solid #fff;
+}
+#login input:disabled#password {
+    background: #ddd url(../images/password1.gif) no-repeat 2px 2px;
+    border: 1px solid #fff;
+}
+label {
+    line-height:26px;
+    display:block;/*块状显示有换行符，独占一行*/
+    font-weight:bold;
+}
+#name, #password {
+    border:1px solid #ccc;
+    width:160px;
+    height:22px;
+    padding-left:20px;
+    margin:6px 0;
+    line-height:20px;
+}
+#name { background:url(../images/name.gif) no-repeat 2px 2px; }/*连个2表示左顶点向右下移动2px*/
+#password { background:url(../images/password.gif) no-repeat 2px 2px; }
+.button { margin:6px 0; }

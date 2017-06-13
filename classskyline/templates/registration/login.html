@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+{% load static from staticfiles %}
+<html>
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1.0, user-scalable=0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>云学堂管理平台</title>
+    <link rel="stylesheet" href="{% static 'assets/account/img/newlogin/login.css' %}">
+    <link href="/static/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'assets/global/plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <link rel="stylesheet" href="{% static 'assets/global/plugins/bootstrapvalidator/css/bootstrapValidator.min.css' %}">
+    <style type="text/css">
+        .login-body input[type=text],.login-body input[type=password]{
+            position: relative;
+            top:2px;
+            height: 35px;
+            line-height: 35px;
+        }
+        .help-block ul li{
+                position: fixed;
+              z-index: 111111;
+              text-indent: 24px;
+              list-style: none;
+        }
+        .input-panel .split{margin-top: -5px;}
+        #error{color:red; text-align: left; display: block; margin: 10px 0 0 18px; font-size: 12px;}
+        i.fa-lock{
+            display: inline-block;
+            float: left;
+            color: #5FB1FA;
+            font-size: 28px;
+            margin-left: 22px;
+            margin-top: 5px;
+            margin-right: 20px;
+        }
+    </style>
+</head>
+
+<body id="main">
+    <div class="login-wrapper">
+        <div class="login-container">
+          <img class="login-logo" src="{% static 'assets/account/img/newlogin/logo.png' %}">
+            <div class="login-panel-container">
+                <div class="login-panel">
+                    <form id="loginForm" role="form" class="login-body" method="post" action="{% url 'django.contrib.auth.views.login' %}">
+                        {% csrf_token %}
+                        <div class="input-panel">
+                                <div class="form-group">
+                                    <img src="{% static 'assets/account/img/newlogin/user_icon.png' %}">
+                                    <input id="username" name="username" type="text" class="form-control"/>
+                                   <p class="help-block"></p>
+                                </div>
+                                <div class="split"></div>
+                                <div class="form-group">
+                                    <!--<img src="{% static 'assets/account/img/newlogin/pwd_icon.png' %}" style="margin-right: 23px;">-->
+                                    <i class="fa fa-lock"></i>
+                                    <input id="password" name="password" type="password" class="form-control" />
+                                    <p class="help-block"></p>
+                                </div>
+
+                        </div>
+                        <div class="check form-group" style="margin-bottom: 10px;">
+                            <input type="checkbox" name="autologin" id="autologin" />下次自动登录
+                            <span id="error"></span>
+                        </div>
+                        <button id="btnmake" type="submit" class="u-btn u-btn-primary">登录</button>
+                        <br>
+                        <input type="hidden" name="next" value="{{ next }}" />
+                        <br>
+                    </form>
+                </div>
+                <div class="login-footerstyle">
+                   推荐使用 Chrome ( <a href="/static/assets/chrome_installer.exe" title="下载 Chrome 浏览器">点此下载</a> )。推荐分辩率为1024*768或者更高。
+                </div>
+            </div>
+            <!--<div class="hr"></div>
+            <div class="footer-links">
+                Copyright © 2014-2015 云课堂管理平台
+            </div>
+            <p class="copy-right">
+                建议使用1366*768分辨率/IE9.0或以上浏览器访问达到最佳效果
+            </p>-->
+        </div>
+    </div>
+
+
+    <script src="{% static 'assets/global/plugins/jquery.min.js' %}" type="text/javascript"></script>
+    <script type="text/javascript" src="{% static 'assets/global/scripts/common.js' %}"></script>
+
+    <script type="text/javascript">
+        $("#btnmake").on("click", function (e) {
+            e.preventDefault();
+            var name = $("#username").val();
+            var pwd = $("#password").val();
+            console.log(name + ' ' + pwd);
+
+            if (name === '' || name.length === 0) {
+                $("#error").text("用户名不能为空");
+                return false;
+            } else if (pwd === '' || pwd.length === 0) {
+                $("#error").text("密码不能为空");
+                return false;
+            } else {
+                var opt = {url: "{% url 'ajax_teacher_login' %}", data: $("#loginForm").serialize(), async: true};
+                common.ajaxpostrequest(opt, function (rsp) {
+                    if (rsp["result"].length > 0) {
+                        var info = rsp["result"];
+                        if (info == "ok") {
+                            window.location.href = "{% url 'dash_board' %}";
+                        } else {
+                            $("#error").text("用户名或者密码错误");
+                        }
+                    }
+                })
+            }
+        });
+    </script>
+
+</body>
+</html>
+
+
+
+
+

@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+    <title>设计优雅的数据表格</title>
+    <style type="text/css">
+        h1{font-size: 16px}
+        table{
+            width: 100%;
+            font-size: 12px;
+            table-layout: fixed;/*固定表格大小，以使过长的文字不撑破表格，自动换行*/
+            empty-cells: show;/*是否显示空单元格表框*/
+            border-collapse: collapse;/*单元格表框合并为一条，取值seprate为分开*/
+            margin: 0 auto;
+            border: 1px solid #cad9ea;
+            color: #666;
+        }
+        th{
+            background-image:url("images/th_bg1.gif");
+            background-repeat: repeat-x;/*背景x轴平铺*/
+            height: 30px;
+            overflow:hidden;/*表头内容溢出时，溢出的内容不显示*/
+        }
+        td{
+            height: 20px;
+        }
+        td,th{
+            border: 1px solid #cad9ea;
+            padding:0 1em 0;/*上右下左依次补白，1em=12像素，即12px*/
+        }
+        tr:nth-child(even){
+            background-color: #f5fafe;
+        }
+    </style>
+</head>
+<body>
+<h1>设计优雅的数据表格</h1>
+<table summary="设计优雅的数据表格">
+    <tr>
+        <th>排名</th>
+        <th>校名</th>
+        <th>总得分</th>
+        <th>人才培养总得分</th>
+        <th>研究生培养得分</th>
+        <th>本科生培养得分</th>
+        <th>科学研究总得分</th>
+        <th>自然科学研究得分</th>
+        <th>社会科学研究得分</th>
+        <th>所属省份</th>
+        <th>分省排名</th>
+        <th>学校类型</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>清华大学</td>
+        <td>296.77</td>
+        <td>128.92</td>
+        <td>93.83</td>
+        <td>35.09</td>
+        <td>167.85</td>
+        <td>148.47</td>
+        <td>19.38</td>
+        <td width="16">京 </td>
+        <td width="12">1 </td>
+        <td>理工</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>北京大学</td>
+        <td>222.02</td>
+        <td>102.11</td>
+        <td>66.08</td>
+        <td>36.03</td>
+        <td>119.91</td>
+        <td>86.78</td>
+        <td>33.13</td>
+        <td width="16">京 </td>
+        <td width="12">2 </td>
+        <td>综合</td>
+    </tr>
+</table>
+</body>
+</html>
