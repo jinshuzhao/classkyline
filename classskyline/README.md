@@ -19,7 +19,7 @@
 
 2. 克隆 Fork 出来的项目（应该在自己的 namespace 中，比如下面的 g11008）
 
-    $> git clone http://gitlab.h3c.com/g11008/classskyline.git
+    $> git clone 
 
 3. 修改内容后提交，然后在网页上点击 New Merge Request 按钮，发起一个 Merge 请求
 
@@ -29,7 +29,7 @@
 
 1. 添加一个远程仓库
 
-    $> git remote add upstream http://gitlab.h3c.com/h3cloudclass/classskyline.git
+    $> git remote add upstream 
 
 2. 从 upstream 更新代码
 
