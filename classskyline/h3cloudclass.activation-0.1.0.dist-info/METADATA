@@ -1,0 +1,20 @@
+Metadata-Version: 2.0
+Name: h3cloudclass.activation
+Version: 0.1.0
+Summary: License Library for H3CloudClass
+Home-page: http://gitlab.h3c.com/h3cloudclass/activation
+Author: H3Cloud Class
+Author-email: gao.jiangmiao@h3c.com
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Security :: Cryptography
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: Implementation :: CPython
+
+UNKNOWN
+
+
